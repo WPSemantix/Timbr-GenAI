@@ -17,4 +17,4 @@ result = generate_timbr_llm_chain.invoke({ "prompt": "What are the total sales f
 
 # Access the components of the result:
 sql = result["sql"]
-table = result["table"]
+concept = result["concept"]

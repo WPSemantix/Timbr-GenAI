@@ -18,4 +18,4 @@ result = execute_timbr_query_chain.invoke({ "prompt": "What are the total sales 
 # Access the components of the result:
 rows = result["rows"]
 sql = result["sql"]
-table = result["table"]
+concept = result["concept"]

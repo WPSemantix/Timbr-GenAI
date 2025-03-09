@@ -11,6 +11,11 @@ agent = create_timbr_sql_agent(
     url='https://your-timbr-app.com/',
     token='tk_XXXXXXXXXXXXXXXXXXXXXXXX',
     ontology='timbr_knowledge_graph',
+    concepts_list='<a list of concepts to use>',
+    views_list='<a list of views to use>',
+    note='<additional note for sql generation prompt>',
+    retries=3,
+    should_validate_sql=False,
 )
 
 result = agent.run("What are the total sales for last month?")
@@ -18,4 +23,6 @@ result = agent.run("What are the total sales for last month?")
 # Access the components of the result:
 rows = result["rows"]
 sql = result["sql"]
-table = result["table"]
+schema = result["schema"]
+concept = result["concept"]
+error = result["error"]

@@ -3,7 +3,7 @@
 
 # Timbr LangChain SDK
 
-The **Timbr LangChain SDK** integrates natural language inputs with Timbr's ontology-driven semantic layer. Leveraging Timbr's robust ontology capabilities, the SDK integates with timbr data models and leverages semantic relationships and annotations, enabling users to query data in a business-friendly language.
+The `Timbr LangChain SDK` integrates natural language inputs with Timbr's ontology-driven semantic layer. Leveraging Timbr's robust ontology capabilities, the SDK integates with timbr data models and leverages semantic relationships and annotations, enabling users to query data in a business-friendly language.
 
 It leverages Large Language Models (LLMs) to interpret user queries, generate Timbr SQL, and fetch query results from the database, enabling seamless interaction with any database connected to timbr.
 
@@ -18,7 +18,8 @@ To use this SDK, ensure you have the following:
   ```bash
   langchain==0.3.13
   langchain_community==0.3.13
-  pytimbr-api==1.0.4
+  langgraph==0.2.70
+  pytimbr-api==1.0.5
   pydantic==2.10.4
   ```
 - **Optional Dependencies (Depending on LLM)**:
@@ -31,14 +32,13 @@ To use this SDK, ensure you have the following:
 
 ## Installation
 
-Contact your Timbr account manager for repository access.
-
-To install the Timbr LLM Connector SDK run:
+To install the Timbr LLM Connector SDK:
 
 ```bash
 pip install <timbr_repo>:langchain-timbr
 ```
 
+Contact your Timbr account manager for repository access.
 
 ## Features
 
@@ -53,64 +53,213 @@ pip install <timbr_repo>:langchain-timbr
 
 Create timbr SQL agent that wraps the pipeline to identify the relevant concept and generate the SQL query over the ontology.
 
-```python
-from langchain_timbr import create_timbr_sql_agent
+**Parameters:**
+- **llm**: Language model instance (or a function taking a prompt string and returning an LLM’s response).
+- **url**: Timbr server URL.
+- **token**: Timbr authentication token.
+- **ontology**: Name of the ontology/knowledge graph.
+- **schema**: *(Optional)* Name of the schema to query.
+- **concept**: *(Optional)* Name of a specific concept to query.
+- **concepts_list**: *(Optional)* List of concept options to query.
+- **views_list**: *(Optional)* List of view options to query.
+- **note**: *(Optional)* Additional note to extend the LLM prompt.
+- **retries**: Number of retry attempts if the generated SQL is invalid.
+- **should_validate_sql**: Whether to validate the SQL before executing it.
 
-agent = create_timbr_sql_agent(
-    llm=llm,
-    url='https://your-timbr-app.com/',
-    token='tk_XXXXXXXXXXXXXXXXXXXXXXXX',
-    ontology='timbr_knowledge_graph',
+```python
+from langchain_timbr import TimbrSqlAgent
+
+agent = TimbrSqlAgent(
+    llm=<llm>,
+    url="https://your-timbr-app.com/",
+    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",
+    ontology="timbr_knowledge_graph",
+    schema="public",               # optional
+    concept="Sales",               # optional
+    concepts_list=["Sales","Orders","Customers"],  # optional
+    views_list=["sales_view"],     # optional
+    note="Focus on US region",     # optional
+    retries=2,                     # optional
+    should_validate_sql=True       # optional
 )
 
 result = agent.run("What are the total sales for last month?")
 
-# Access the components of the result:
 rows = result["rows"]
 sql = result["sql"]
-table = result["table"]
+concept = result["concept"]
+schema = result["schema"]
+error = result.get("error", None)
+```
+
+### Identify Concept Chain
+
+Returns the suggested concept to query based on the user question.
+
+**Parameters:**
+- **llm**: Language model instance (or a function taking a prompt string and returning an LLM’s response).
+- **url**: Timbr server URL.
+- **token**: Timbr authentication token.
+- **ontology**: Name of the ontology/knowledge graph.
+- **concepts_list**: *(Optional)* List of concept options to query.
+- **views_list**: *(Optional)* List of view options to query.
+- **note**: *(Optional)* Additional note to extend the LLM prompt.
+
+```python
+from langchain_timbr import IdentifyTimbrConceptChain
+
+identify_timbr_concept_chain = IdentifyTimbrConceptChain(
+    llm=<llm>,
+    url="https://your-timbr-app.com/",
+    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",
+    ontology="timbr_knowledge_graph",
+    concepts_list=["Sales","Orders"],  # optional
+    views_list=["sales_view"],         # optional
+    note="Focus on last month's data"  # optional
+)
+
+result = identify_timbr_concept_chain({ "prompt": "What are the total sales for last month?" })
+concept = result["concept"]
+schema = result["schema"]
 ```
 
 ### Generate SQL Chain
 
 Returns the suggested SQL based on the user question.
 
+**Parameters:**
+- **llm**: Language model instance (or a function taking a prompt string and returning an LLM’s response).
+- **url**: Timbr server URL.
+- **token**: Timbr authentication token.
+- **ontology**: Name of the ontology/knowledge graph.
+- **schema**: *(Optional)* Name of the schema to query.
+- **concept**: *(Optional)* Name of a specific concept to query.
+- **concepts_list**: *(Optional)* List of concept options to query.
+- **views_list**: *(Optional)* List of view options to query.
+- **note**: *(Optional)* Additional note to extend the LLM prompt.
+
 ```python
 from langchain_timbr import GenerateTimbrSqlChain
 
-generate_timbr_llm_chain = GenerateTimbrSqlChain(
-    llm=llm,
-    url='https://your-timbr-app.com/',
-    token='tk_XXXXXXXXXXXXXXXXXXXXXXXX',
-    ontology='timbr_knowledge_graph',
+generate_timbr_sql_chain = GenerateTimbrSqlChain(
+    llm=<llm>,
+    url="https://your-timbr-app.com/",
+    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",
+    ontology="timbr_knowledge_graph",
+    schema="public",      # optional
+    concept="Sales",      # optional
+    concepts_list=["Sales","Orders"],  # optional
+    views_list=["sales_view"],         # optional
+    note="We only need sums"           # optional
 )
 
-result = generate_timbr_llm_chain.invoke({ "prompt": "What are the total sales for last month?" })
-
-# Access the components of the result:
+result = generate_timbr_sql_chain({ "prompt": "What are the total sales for last month?" })
 sql = result["sql"]
+concept = result["concept"]
+schema = result["schema"]
+```
+
+### Validate SQL Chain
+
+Validates the timbr SQL and re-generate a new one if necessary based on the user question.
+
+**Parameters:**
+- **llm**: Language model instance (or a function taking a prompt string and returning an LLM’s response).
+- **url**: Timbr server URL.
+- **token**: Timbr authentication token.
+- **ontology**: Name of the ontology/knowledge graph.
+- **schema**: *(Optional)* Name of the schema to query.
+- **concept**: *(Optional)* Name of a specific concept to query.
+- **concepts_list**: *(Optional)* List of concept options to query.
+- **views_list**: *(Optional)* List of view options to query.
+- **note**: *(Optional)* Additional note to extend the LLM prompt.
+- **retries**: Number of retry attempts if the generated SQL is invalid.
+
+```python
+from langchain_timbr import ValidateTimbrSqlChain
+
+validate_timbr_sql_chain = ValidateTimbrSqlChain(
+    llm=<llm>,
+    url="https://your-timbr-app.com/",
+    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",
+    ontology="timbr_knowledge_graph",
+    schema="public",               # optional
+    concept="Sales",               # optional
+    concepts_list=["Sales","Orders"],  # optional
+    views_list=["sales_view"],         # optional
+    note="We only need sums",     # optional
+    retries=3
+)
+
+result = validate_timbr_sql_chain({
+    "prompt": "What are the total sales for last month?",
+    "sql": "SELECT SUM(amount) FROM sales WHERE date > current_date - INTERVAL '1 month'"
+})
+
+validated_sql = result["sql"]
+is_sql_valid = result["is_sql_valid"]
+error = result["error"]
+concept = result["concept"]
+schema = result["schema"]
 ```
 
 ### Execute Query Chain
 
 Calls the Generate SQL Chain and executes the query in timbr. Returns the query results.
 
+**Parameters:**
+- **llm**: Language model instance (or a function taking a prompt string and returning an LLM’s response).
+- **url**: Timbr server URL.
+- **token**: Timbr authentication token.
+- **ontology**: Name of the ontology/knowledge graph.
+- **schema**: *(Optional)* Name of the schema to query.
+- **concept**: *(Optional)* Name of a specific concept to query.
+- **concepts_list**: *(Optional)* List of concept options to query.
+- **views_list**: *(Optional)* List of view options to query.
+- **note**: *(Optional)* Additional note to extend the LLM prompt.
+- **retries**: Number of retry attempts if the generated SQL is invalid.
+- **should_validate_sql**: Whether to validate the SQL before executing it.
+
 ```python
 from langchain_timbr import ExecuteTimbrQueryChain
 
 execute_timbr_query_chain = ExecuteTimbrQueryChain(
-    llm=llm,
-    url='https://your-timbr-app.com/',
-    token='tk_XXXXXXXXXXXXXXXXXXXXXXXX',
-    ontology='timbr_knowledge_graph',
+    llm=<llm>,
+    url="https://your-timbr-app.com/",
+    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",
+    ontology="timbr_knowledge_graph",
+    schema="public",              # optional
+    concept="Sales",              # optional
+    concepts_list=["Sales","Orders"],  # optional
+    views_list=["sales_view"],         # optional
+    note="We only need sums",     # optional
+    retries=3,                    # optional
+    should_validate_sql=True      # optional
 )
 
-result = execute_timbr_query_chain.invoke({ "prompt": "What are the total sales for last month?" })
-
-# Access the components of the result:
+result = execute_timbr_query_chain({ "prompt": "What are the total sales for last month?" })
 rows = result["rows"]
 sql = result["sql"]
-table = result["table"]
+concept = result["concept"]
+schema = result["schema"]
+error = result.get("error", None)
+```
+
+### Generate Answer Chain
+
+Generates answet based on the prompt and query results.
+
+**Parameters:**
+from langchain_timbr import GenerateAnswerChain
+
+generate_answer_chain = GenerateAnswerChain(llm=<llm>)
+
+answer_result = generate_answer_chain({
+    "prompt": "What are the total sales for last month?",
+    "rows": [{"total_sales": 1250000}]
+})
+
+answer = answer_result["answer"]
 ```
 
 ## Quick Start using timbr api
@@ -169,13 +318,148 @@ data = llm_connector.run_llm_query("What are the total sales for last month?")
 print("Results:", data)
 ```
 
+
+## LangGraph interface
+
+### Identify Concept Node
+
+Wraps the **IdentifyTimbrConceptChain** functionality to identify the relevant concept (and schema) based on the latest message in the state.
+
+**Usage Example:**
+```python
+from langgraph.graph import StateGraph
+from langchain_timbr import IdentifyConceptNode
+
+llm_instance = <your_llm_instance>
+identify_node = IdentifyConceptNode(
+    llm=llm_instance,
+    url="https://your-timbr-app.com/",
+    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",
+    ontology="timbr_knowledge_graph",
+    concepts_list=["Sales", "Orders"],
+    views_list=["sales_view"]
+)
+
+state = StateGraph()
+state.messages = [{"content": "What are the total sales for last month?"}]
+
+output = identify_node(state)
+print("Identified Concept:", output)
+```
+
+### Generate SQL Node
+
+Wraps the **GenerateTimbrSqlChain** functionality to generate SQL from a natural language prompt.
+Expects the state to include a `prompt` and returns a payload containing the generated SQL along with the schema and concept.
+
+**Usage Example:**
+```python
+from langgraph.graph import StateGraph
+from langchain_timbr import GenerateTimbrSqlNode
+
+llm_instance = <your_llm_instance>
+generate_sql_node = GenerateTimbrSqlNode(
+    llm=llm_instance,
+    url="https://your-timbr-app.com/",
+    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",
+    ontology="timbr_knowledge_graph",
+    schema="public",
+    concept="Sales"
+)
+
+state = StateGraph()
+state.messages = [{"content": "What are the total sales for last month?"}]
+
+output = generate_sql_node(state)
+print("Generated SQL Node Output:", output)
+```
+
+### Validate Semantic SQL Node
+
+Wraps the **ValidateTimbrSqlChain** functionality to validate (and optionally adjust) a generated SQL query.
+It expects the state to include a `sql` and/or `prompt`, and returns the validated SQL along with its validity status and any error.
+
+**Usage Example:**
+```python
+from langgraph.graph import StateGraph
+from langchain_timbr import ValidateSemanticSqlNode
+
+llm_instance = <your_llm_instance>
+validate_sql_node = ValidateSemanticSqlNode(
+    llm=llm_instance,
+    url="https://your-timbr-app.com/",
+    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",
+    ontology="timbr_knowledge_graph",
+    schema="public",
+    concept="Sales",
+    retries=3
+)
+
+state = StateGraph()
+state.sql = "SELECT SUM(amount) FROM sales WHERE date > current_date - INTERVAL '1 month'"
+state.prompt = "What are the total sales for last month?"
+
+output = validate_sql_node(state)
+print("Validated SQL Node Output:", output)
+```
+
+### Execute Semantic SQL Node
+
+Wraps the **ExecuteTimbrQueryChain** functionality to execute the generated SQL query.
+It expects the state to include a `prompt` and returns the query result rows.
+
+**Usage Example:**
+```python
+from langgraph.graph import StateGraph
+from langchain_timbr import ExecuteSemanticQueryNode
+
+llm_instance = <your_llm_instance>
+execute_query_node = ExecuteSemanticQueryNode(
+    llm=llm_instance,
+    url="https://your-timbr-app.com/",
+    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",
+    ontology="timbr_knowledge_graph",
+    schema="public",
+    concept="Sales"
+)
+
+state = StateGraph()
+state.messages = [{"content": "What are the total sales for last month?"}]
+
+output = execute_query_node(state)
+print("Query Execution Rows:", output)
+```
+
+### Generate Response Node
+
+Uses a response template to generate a final human-readable answer based on the SQL, schema, concept, and query rows.
+
+**Usage Example:**
+```python
+from langchain_timbr import GenerateResponseNode
+
+response_node = GenerateResponseNode()
+
+# Example payload from previous nodes
+payload = {
+    "sql": "SELECT SUM(amount) FROM sales WHERE date > current_date - INTERVAL '1 month'",
+    "schema": "public",
+    "concept": "Sales",
+    "rows": [{"total_sales": 1250000}]
+}
+
+output = response_node(payload)
+print("Final Response:", output["response"])
+```
+
 ## Examples
 
 Explore the [examples/](examples/) directory for detailed use cases, including:
 
 - **Streamlit Integration**: Build a user-friendly app to query Timbr interactively.
-- **LangChain Chains**: Use `GenerateTimbrSqlChain` and `ExecuteTimbrQueryChain` for more granular control.
+- **LangChain Chains**: Use `GenerateTimbrSqlChain`, `ExecuteTimbrQueryChain` & more, for more granular control.
 - **Custom Agents**: Create custom agents with LangChain’s `AgentExecutor` to handle complex workflows.
+- **LangGraph Nodes**: Use `GenerateTimbrSqlNode` and `ExecuteTimbrQueryNode` & more, for more granular control.
 
 ## Timbr Methods Overview
 
@@ -195,12 +479,12 @@ Set or switch the ontology for subsequent operations.
 llm_connector.set_ontology("<ontology_name>")
 ```
 
-### `determine_table`
+### `determine_concept`
 
-Use the LLM to determine the appropriate table for a query.
+Use the LLM to determine the appropriate concept and schema for a query.
 
 ```python
-table_name = llm_connector.determine_table("Show me sales by region.")
+concept_name, schema_name = llm_connector.determine_concept("Show me sales by region.")
 ```
 
 ### `generate_sql`
@@ -208,7 +492,15 @@ table_name = llm_connector.determine_table("Show me sales by region.")
 Generate Timbr SQL for a user query.
 
 ```python
-sql_query = llm_connector.generate_sql("What is the revenue by product category?", table_name="sales_data")
+sql_query = llm_connector.generate_sql("What is the revenue by product category?", concept_name="sales_data")
+```
+
+### `validate_sql`
+
+Validates Timbr SQL.
+
+```python
+is_sql_valid, error = llm_connector.validate_sql("What is the revenue by product category?", sql_query="SELECT SUM(revenue) FROM sales GROUP BY product_category")
 ```
 
 ### `run_timbr_query`
@@ -239,10 +531,7 @@ response = llm_connector.run_llm_query("What are the top 5 products by sales?")
 
 - [Timbr Website](https://timbr.ai)
 
-
-
 ## Support
 
-Please contact your Timbr account manager For questions or support.
-
+For questions or support, please contact your Timbr account manager.
 
