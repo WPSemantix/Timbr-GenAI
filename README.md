@@ -47,7 +47,7 @@ Contact your Timbr account manager for repository access.
 - **Knowledge Graph Access**: Interact with ontologies in natural language and retrieve context-aware answers.
 - **Streamlined Querying**: Combine natural language inputs with timbr using simple methods like `run_llm_query`.
 
-![Timbr LangGraph Flow](/documentation/examples/timbr-langgraph.png)
+![Timbr LangGraph Flow](/examples/timbr-langgraph.png)
 
 ## LangChain interface
 
