@@ -62,11 +62,21 @@ Create timbr SQL agent that wraps the pipeline to identify the relevant concept 
 - **ontology**: Name of the ontology/knowledge graph.
 - **schema**: *(Optional)* Name of the schema to query.
 - **concept**: *(Optional)* Name of a specific concept to query.
-- **concepts_list**: *(Optional)* List of concept options to query.
-- **views_list**: *(Optional)* List of view options to query.
-- **note**: *(Optional)* Additional note to extend the LLM prompt.
-- **retries**: Number of retry attempts if the generated SQL is invalid.
+- **concepts_list**: *(Optional)* Collection of concepts to include (List of strings, or a string of concept names divided by comma).
+    - If None or empty, all available concepts are used.
+    - If populated, only those concepts will be included in query generation.
+- **views_list**: *(Optional)* Collection of views/cubes to include (List of strings, or a string of view/cube names divided by comma).
+    - If None or empty, all available views/cubes are used.
+    - If populated, only those views/cubes will be included in query generation.
+- **include_tags**: *(Optional)* Specific concept/property tag names to consider when generating the query.
+    - If `None` or empty, no tags are used.
+    - If a single string or list of strings is provided, only those tags (if they exist) will be attached.
+    - Use List of strings or a comma-separated string (e.g. `'tag1,tag2'`) to specify multiple tags.
+    - Use `'*'` to include **all** tags.
 - **should_validate_sql**: Whether to validate the SQL before executing it.
+- **retries**: Number of retry attempts if the generated SQL is invalid.
+- **max_limit**: Maximum number of rows to return.
+- **note**: *(Optional)* Additional note to extend the LLM prompt.
 
 ```python
 from langchain_timbr import TimbrSqlAgent
@@ -76,7 +86,7 @@ agent = TimbrSqlAgent(
     url="https://your-timbr-app.com/",
     token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",
     ontology="timbr_knowledge_graph",
-    schema="public",               # optional
+    schema="dtimbr",               # optional
     concept="Sales",               # optional
     concepts_list=["Sales","Orders","Customers"],  # optional
     views_list=["sales_view"],     # optional
@@ -103,8 +113,17 @@ Returns the suggested concept to query based on the user question.
 - **url**: Timbr server URL.
 - **token**: Timbr authentication token.
 - **ontology**: Name of the ontology/knowledge graph.
-- **concepts_list**: *(Optional)* List of concept options to query.
-- **views_list**: *(Optional)* List of view options to query.
+- **concepts_list**: *(Optional)* Collection of concepts to include (List of strings, or a string of concept names divided by comma).
+    - If None or empty, all available concepts are used.
+    - If populated, only those concepts will be included in query generation.
+- **views_list**: *(Optional)* Collection of views/cubes to include (List of strings, or a string of view/cube names divided by comma).
+    - If None or empty, all available views/cubes are used.
+    - If populated, only those views/cubes will be included in query generation.
+- **include_tags**: *(Optional)* Specific concept/property tag names to consider when generating the query.
+    - If `None` or empty, no tags are used.
+    - If a single string or list of strings is provided, only those tags (if they exist) will be attached.
+    - Use List of strings or a comma-separated string (e.g. `'tag1,tag2'`) to specify multiple tags.
+    - Use `'*'` to include **all** tags.
 - **note**: *(Optional)* Additional note to extend the LLM prompt.
 
 ```python
@@ -136,8 +155,18 @@ Returns the suggested SQL based on the user question.
 - **ontology**: Name of the ontology/knowledge graph.
 - **schema**: *(Optional)* Name of the schema to query.
 - **concept**: *(Optional)* Name of a specific concept to query.
-- **concepts_list**: *(Optional)* List of concept options to query.
-- **views_list**: *(Optional)* List of view options to query.
+- **concepts_list**: *(Optional)* Collection of concepts to include (List of strings, or a string of concept names divided by comma).
+    - If None or empty, all available concepts are used.
+    - If populated, only those concepts will be included in query generation.
+- **views_list**: *(Optional)* Collection of views/cubes to include (List of strings, or a string of view/cube names divided by comma).
+    - If None or empty, all available views/cubes are used.
+    - If populated, only those views/cubes will be included in query generation.
+- **include_tags**: *(Optional)* Specific concept/property tag names to consider when generating the query.
+    - If `None` or empty, no tags are used.
+    - If a single string or list of strings is provided, only those tags (if they exist) will be attached.
+    - Use List of strings or a comma-separated string (e.g. `'tag1,tag2'`) to specify multiple tags.
+    - Use `'*'` to include **all** tags.
+- **max_limit**: Maximum number of rows to return.
 - **note**: *(Optional)* Additional note to extend the LLM prompt.
 
 ```python
@@ -148,7 +177,7 @@ generate_timbr_sql_chain = GenerateTimbrSqlChain(
     url="https://your-timbr-app.com/",
     token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",
     ontology="timbr_knowledge_graph",
-    schema="public",      # optional
+    schema="dtimbr",      # optional
     concept="Sales",      # optional
     concepts_list=["Sales","Orders"],  # optional
     views_list=["sales_view"],         # optional
@@ -172,10 +201,20 @@ Validates the timbr SQL and re-generate a new one if necessary based on the user
 - **ontology**: Name of the ontology/knowledge graph.
 - **schema**: *(Optional)* Name of the schema to query.
 - **concept**: *(Optional)* Name of a specific concept to query.
-- **concepts_list**: *(Optional)* List of concept options to query.
-- **views_list**: *(Optional)* List of view options to query.
-- **note**: *(Optional)* Additional note to extend the LLM prompt.
 - **retries**: Number of retry attempts if the generated SQL is invalid.
+- **concepts_list**: *(Optional)* Collection of concepts to include (List of strings, or a string of concept names divided by comma).
+    - If None or empty, all available concepts are used.
+    - If populated, only those concepts will be included in query generation.
+- **views_list**: *(Optional)* Collection of views/cubes to include (List of strings, or a string of view/cube names divided by comma).
+    - If None or empty, all available views/cubes are used.
+    - If populated, only those views/cubes will be included in query generation.
+- **include_tags**: *(Optional)* Specific concept/property tag names to consider when generating the query.
+    - If `None` or empty, no tags are used.
+    - If a single string or list of strings is provided, only those tags (if they exist) will be attached.
+    - Use List of strings or a comma-separated string (e.g. `'tag1,tag2'`) to specify multiple tags.
+    - Use `'*'` to include **all** tags.
+- **max_limit**: Maximum number of rows to return.
+- **note**: *(Optional)* Additional note to extend the LLM prompt.
 
 ```python
 from langchain_timbr import ValidateTimbrSqlChain
@@ -185,7 +224,7 @@ validate_timbr_sql_chain = ValidateTimbrSqlChain(
     url="https://your-timbr-app.com/",
     token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",
     ontology="timbr_knowledge_graph",
-    schema="public",               # optional
+    schema="dtimbr",               # optional
     concept="Sales",               # optional
     concepts_list=["Sales","Orders"],  # optional
     views_list=["sales_view"],         # optional
@@ -216,11 +255,21 @@ Calls the Generate SQL Chain and executes the query in timbr. Returns the query 
 - **ontology**: Name of the ontology/knowledge graph.
 - **schema**: *(Optional)* Name of the schema to query.
 - **concept**: *(Optional)* Name of a specific concept to query.
-- **concepts_list**: *(Optional)* List of concept options to query.
-- **views_list**: *(Optional)* List of view options to query.
-- **note**: *(Optional)* Additional note to extend the LLM prompt.
-- **retries**: Number of retry attempts if the generated SQL is invalid.
+- **concepts_list**: *(Optional)* Collection of concepts to include (List of strings, or a string of concept names divided by comma).
+    - If None or empty, all available concepts are used.
+    - If populated, only those concepts will be included in query generation.
+- **views_list**: *(Optional)* Collection of views/cubes to include (List of strings, or a string of view/cube names divided by comma).
+    - If None or empty, all available views/cubes are used.
+    - If populated, only those views/cubes will be included in query generation.
+- **include_tags**: *(Optional)* Specific concept/property tag names to consider when generating the query.
+    - If `None` or empty, no tags are used.
+    - If a single string or list of strings is provided, only those tags (if they exist) will be attached.
+    - Use List of strings or a comma-separated string (e.g. `'tag1,tag2'`) to specify multiple tags.
+    - Use `'*'` to include **all** tags.
 - **should_validate_sql**: Whether to validate the SQL before executing it.
+- **retries**: Number of retry attempts if the generated SQL is invalid.
+- **max_limit**: Maximum number of rows to return.
+- **note**: *(Optional)* Additional note to extend the LLM prompt.
 
 ```python
 from langchain_timbr import ExecuteTimbrQueryChain
@@ -230,7 +279,7 @@ execute_timbr_query_chain = ExecuteTimbrQueryChain(
     url="https://your-timbr-app.com/",
     token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",
     ontology="timbr_knowledge_graph",
-    schema="public",              # optional
+    schema="dtimbr",              # optional
     concept="Sales",              # optional
     concepts_list=["Sales","Orders"],  # optional
     views_list=["sales_view"],         # optional
@@ -249,9 +298,12 @@ error = result.get("error", None)
 
 ### Generate Answer Chain
 
-Generates answet based on the prompt and query results.
+Generates answer based on the prompt and query results.
 
 **Parameters:**
+- **llm**: Language model instance (or a function taking a prompt string and returning an LLM’s response).
+
+```python
 from langchain_timbr import GenerateAnswerChain
 
 generate_answer_chain = GenerateAnswerChain(llm=<llm>)
@@ -365,7 +417,7 @@ generate_sql_node = GenerateTimbrSqlNode(
     url="https://your-timbr-app.com/",
     token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",
     ontology="timbr_knowledge_graph",
-    schema="public",
+    schema="dtimbr",
     concept="Sales"
 )
 
@@ -392,7 +444,7 @@ validate_sql_node = ValidateSemanticSqlNode(
     url="https://your-timbr-app.com/",
     token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",
     ontology="timbr_knowledge_graph",
-    schema="public",
+    schema="dtimbr",
     concept="Sales",
     retries=3
 )
@@ -421,7 +473,7 @@ execute_query_node = ExecuteSemanticQueryNode(
     url="https://your-timbr-app.com/",
     token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",
     ontology="timbr_knowledge_graph",
-    schema="public",
+    schema="dtimbr",
     concept="Sales"
 )
 
@@ -445,7 +497,7 @@ response_node = GenerateResponseNode()
 # Example payload from previous nodes
 payload = {
     "sql": "SELECT SUM(amount) FROM sales WHERE date > current_date - INTERVAL '1 month'",
-    "schema": "public",
+    "schema": "dtimbr",
     "concept": "Sales",
     "rows": [{"total_sales": 1250000}]
 }
