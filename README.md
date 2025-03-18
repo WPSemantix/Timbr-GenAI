@@ -70,7 +70,7 @@ Create timbr SQL agent that wraps the pipeline to identify the relevant concept 
     - If populated, only those views/cubes will be included in query generation.
 - **include_tags**: *(Optional)* Specific concept/property tag names to consider when generating the query.
     - If `None` or empty, no tags are used.
-    - If a single string or list of strings is provided, only those tags (if they exist) will be attached.
+    - If a single string or list of strings is provided, only those tags (if they exist) will be attached to the prompt.
     - Use List of strings or a comma-separated string (e.g. `'tag1,tag2'`) to specify multiple tags.
     - Use `'*'` to include **all** tags.
 - **should_validate_sql**: Whether to validate the SQL before executing it.
@@ -121,7 +121,7 @@ Returns the suggested concept to query based on the user question.
     - If populated, only those views/cubes will be included in query generation.
 - **include_tags**: *(Optional)* Specific concept/property tag names to consider when generating the query.
     - If `None` or empty, no tags are used.
-    - If a single string or list of strings is provided, only those tags (if they exist) will be attached.
+    - If a single string or list of strings is provided, only those tags (if they exist) will be attached to the prompt.
     - Use List of strings or a comma-separated string (e.g. `'tag1,tag2'`) to specify multiple tags.
     - Use `'*'` to include **all** tags.
 - **note**: *(Optional)* Additional note to extend the LLM prompt.
@@ -163,7 +163,7 @@ Returns the suggested SQL based on the user question.
     - If populated, only those views/cubes will be included in query generation.
 - **include_tags**: *(Optional)* Specific concept/property tag names to consider when generating the query.
     - If `None` or empty, no tags are used.
-    - If a single string or list of strings is provided, only those tags (if they exist) will be attached.
+    - If a single string or list of strings is provided, only those tags (if they exist) will be attached to the prompt.
     - Use List of strings or a comma-separated string (e.g. `'tag1,tag2'`) to specify multiple tags.
     - Use `'*'` to include **all** tags.
 - **max_limit**: Maximum number of rows to return.
@@ -210,7 +210,7 @@ Validates the timbr SQL and re-generate a new one if necessary based on the user
     - If populated, only those views/cubes will be included in query generation.
 - **include_tags**: *(Optional)* Specific concept/property tag names to consider when generating the query.
     - If `None` or empty, no tags are used.
-    - If a single string or list of strings is provided, only those tags (if they exist) will be attached.
+    - If a single string or list of strings is provided, only those tags (if they exist) will be attached to the prompt.
     - Use List of strings or a comma-separated string (e.g. `'tag1,tag2'`) to specify multiple tags.
     - Use `'*'` to include **all** tags.
 - **max_limit**: Maximum number of rows to return.
@@ -263,7 +263,7 @@ Calls the Generate SQL Chain and executes the query in timbr. Returns the query 
     - If populated, only those views/cubes will be included in query generation.
 - **include_tags**: *(Optional)* Specific concept/property tag names to consider when generating the query.
     - If `None` or empty, no tags are used.
-    - If a single string or list of strings is provided, only those tags (if they exist) will be attached.
+    - If a single string or list of strings is provided, only those tags (if they exist) will be attached to the prompt.
     - Use List of strings or a comma-separated string (e.g. `'tag1,tag2'`) to specify multiple tags.
     - Use `'*'` to include **all** tags.
 - **should_validate_sql**: Whether to validate the SQL before executing it.
