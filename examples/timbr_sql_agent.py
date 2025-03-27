@@ -18,7 +18,7 @@ agent = create_timbr_sql_agent(
     should_validate_sql=False,
 )
 
-result = agent.run("What are the total sales for last month?")
+result = agent.invoke("What are the total sales for last month?")
 
 # Access the components of the result:
 rows = result["rows"]

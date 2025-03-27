@@ -95,7 +95,7 @@ agent = TimbrSqlAgent(
     should_validate_sql=True       # optional
 )
 
-result = agent.run("What are the total sales for last month?")
+result = agent.invoke("What are the total sales for last month?")
 
 rows = result["rows"]
 sql = result["sql"]
@@ -139,7 +139,7 @@ identify_timbr_concept_chain = IdentifyTimbrConceptChain(
     note="Focus on last month's data"  # optional
 )
 
-result = identify_timbr_concept_chain({ "prompt": "What are the total sales for last month?" })
+result = identify_timbr_concept_chain.invoke({ "prompt": "What are the total sales for last month?" })
 concept = result["concept"]
 schema = result["schema"]
 ```
@@ -184,7 +184,7 @@ generate_timbr_sql_chain = GenerateTimbrSqlChain(
     note="We only need sums"           # optional
 )
 
-result = generate_timbr_sql_chain({ "prompt": "What are the total sales for last month?" })
+result = generate_timbr_sql_chain.invoke({ "prompt": "What are the total sales for last month?" })
 sql = result["sql"]
 concept = result["concept"]
 schema = result["schema"]
@@ -232,7 +232,7 @@ validate_timbr_sql_chain = ValidateTimbrSqlChain(
     retries=3
 )
 
-result = validate_timbr_sql_chain({
+result = validate_timbr_sql_chain.invoke({
     "prompt": "What are the total sales for last month?",
     "sql": "SELECT SUM(amount) FROM sales WHERE date > current_date - INTERVAL '1 month'"
 })
@@ -288,7 +288,7 @@ execute_timbr_query_chain = ExecuteTimbrQueryChain(
     should_validate_sql=True      # optional
 )
 
-result = execute_timbr_query_chain({ "prompt": "What are the total sales for last month?" })
+result = execute_timbr_query_chain.invoke({ "prompt": "What are the total sales for last month?" })
 rows = result["rows"]
 sql = result["sql"]
 concept = result["concept"]
@@ -308,7 +308,7 @@ from langchain_timbr import GenerateAnswerChain
 
 generate_answer_chain = GenerateAnswerChain(llm=<llm>)
 
-answer_result = generate_answer_chain({
+answer_result = generate_answer_chain.invoke({
     "prompt": "What are the total sales for last month?",
     "rows": [{"total_sales": 1250000}]
 })
