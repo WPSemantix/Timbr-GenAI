@@ -3,7 +3,7 @@
 
 # Timbr LangChain SDK
 
-The `Timbr LangChain SDK` integrates natural language inputs with Timbr's ontology-driven semantic layer. Leveraging Timbr's robust ontology capabilities, the SDK integates with timbr data models and leverages semantic relationships and annotations, enabling users to query data in a business-friendly language.
+The **Timbr LangChain SDK** integrates natural language inputs with Timbr's ontology-driven semantic layer. Leveraging Timbr's robust ontology capabilities, the SDK integates with timbr data models and leverages semantic relationships and annotations, enabling users to query data in a business-friendly language.
 
 It leverages Large Language Models (LLMs) to interpret user queries, generate Timbr SQL, and fetch query results from the database, enabling seamless interaction with any database connected to timbr.
 
@@ -16,10 +16,10 @@ To use this SDK, ensure you have the following:
 - **Python Version**: Python 3.9.13
 - **Required Dependencies**:
   ```bash
-  langchain==0.3.13
-  langchain_community==0.3.13
-  langgraph==0.2.70
-  pytimbr-api==1.0.5
+  langchain>=0.3.21
+  langchain_community>=0.3.20
+  langgraph>=0.3.20
+  pytimbr-api>=1.0.8
   pydantic==2.10.4
   ```
 - **Optional Dependencies (Depending on LLM)**:
