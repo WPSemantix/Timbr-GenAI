@@ -73,6 +73,7 @@ Create timbr SQL agent that wraps the pipeline to identify the relevant concept 
     - If a single string or list of strings is provided, only those tags (if they exist) will be attached to the prompt.
     - Use List of strings or a comma-separated string (e.g. `'tag1,tag2'`) to specify multiple tags.
     - Use `'*'` to include **all** tags.
+- **exclude_properties**: *(Optional)* Collection of properties to exclude from the query (List of strings, or a string of property names divided by comma. entity_id, entity_type & entity_label are excluded by default).
 - **should_validate_sql**: Whether to validate the SQL before executing it.
 - **retries**: Number of retry attempts if the generated SQL is invalid.
 - **max_limit**: Maximum number of rows to return.
@@ -166,6 +167,7 @@ Returns the suggested SQL based on the user question.
     - If a single string or list of strings is provided, only those tags (if they exist) will be attached to the prompt.
     - Use List of strings or a comma-separated string (e.g. `'tag1,tag2'`) to specify multiple tags.
     - Use `'*'` to include **all** tags.
+- **exclude_properties**: *(Optional)* Collection of properties to exclude from the query (List of strings, or a string of property names divided by comma. entity_id, entity_type & entity_label are excluded by default).
 - **max_limit**: Maximum number of rows to return.
 - **note**: *(Optional)* Additional note to extend the LLM prompt.
 
@@ -213,6 +215,7 @@ Validates the timbr SQL and re-generate a new one if necessary based on the user
     - If a single string or list of strings is provided, only those tags (if they exist) will be attached to the prompt.
     - Use List of strings or a comma-separated string (e.g. `'tag1,tag2'`) to specify multiple tags.
     - Use `'*'` to include **all** tags.
+- **exclude_properties**: *(Optional)* Collection of properties to exclude from the query (List of strings, or a string of property names divided by comma. entity_id, entity_type & entity_label are excluded by default).
 - **max_limit**: Maximum number of rows to return.
 - **note**: *(Optional)* Additional note to extend the LLM prompt.
 
@@ -266,6 +269,7 @@ Calls the Generate SQL Chain and executes the query in timbr. Returns the query 
     - If a single string or list of strings is provided, only those tags (if they exist) will be attached to the prompt.
     - Use List of strings or a comma-separated string (e.g. `'tag1,tag2'`) to specify multiple tags.
     - Use `'*'` to include **all** tags.
+- **exclude_properties**: *(Optional)* Collection of properties to exclude from the query (List of strings, or a string of property names divided by comma. entity_id, entity_type & entity_label are excluded by default).
 - **should_validate_sql**: Whether to validate the SQL before executing it.
 - **retries**: Number of retry attempts if the generated SQL is invalid.
 - **max_limit**: Maximum number of rows to return.
