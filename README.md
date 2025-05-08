@@ -16,9 +16,9 @@ To use this SDK, ensure you have the following:
 - **Python Version**: Python 3.9.13
 - **Required Dependencies**:
   ```bash
-  langchain>=0.3.21
-  langchain_community>=0.3.20
-  langgraph>=0.3.20
+  langchain==0.3.25
+  langchain_community==0.3.20
+  langgraph==0.3.20
   pytimbr-api>=1.0.8
   pydantic==2.10.4
   ```
@@ -26,8 +26,8 @@ To use this SDK, ensure you have the following:
   ```bash
   langchain-anthropic==0.3.1
   anthropic==0.42.0
-  langchain-openai==0.2.14
-  openai==1.58.1
+  langchain-openai==0.3.16
+  openai==1.77.0
   ```
 
 ## Installation
