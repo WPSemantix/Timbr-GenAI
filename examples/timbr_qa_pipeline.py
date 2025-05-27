@@ -22,6 +22,6 @@ pipeline = SequentialChain(
     output_variables=["answer", "sql"]
 )
 
-result = pipeline.invoke({"prompt": "What are the total sales for last month?"})
+result = pipeline.invoke({ "prompt": "What are the total sales for last month?" })
 
 print("Answer:", result["answer"])

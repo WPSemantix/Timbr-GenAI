@@ -56,23 +56,28 @@ Contact your Timbr account manager for repository access.
 Create timbr SQL agent that wraps the pipeline to identify the relevant concept and generate the SQL query over the ontology.
 
 **Parameters:**
+
 | Parameter | Type / Default | Description |
 |-----------|----------------|-------------|
-| **llm** | LLM<br>*Required* | Language model instance (or a function taking a prompt string and returning an LLM's response). |
-| **url** | str<br>*Required* | Timbr server URL. |
-| **token** | str<br>*Required* | Timbr authentication token. |
-| **ontology** | str<br>*Required* | Name of the ontology/knowledge graph. |
-| **schema** | str<br>*Default: None* | *(Optional)* Name of the schema to query. |
-| **concept** | str<br>*Default: None* | *(Optional)* Name of a specific concept to query. |
-| **concepts_list** | List[str] or str<br>*Default: None* | *(Optional)* Collection of concepts to include (List of strings, or a string of concept names divided by comma).<br>- If None, empty or '*', all available concepts are used.<br>- If populated, only those concepts will be included in query generation.<br>- If 'none' or 'null', no concepts will be used for the query. |
-| **views_list** | List[str] or str<br>*Default: None* | *(Optional)* Collection of views/cubes to include (List of strings, or a string of view/cube names divided by comma).<br>- If None, empty or '*', all available views/cubes are used.<br>- If populated, only those views/cubes will be included in query generation.<br>- If 'none' or 'null', no views/cubes will be used for the query. |
-| **include_logic_concepts** | bool<br>*Default: False* | *(Optional)* Whether to include logic concepts (concepts without unique properties which only inherit from an upper level concept with filter logic) in the query.<br>*Note: This parameter has no effect when `concepts_list` is provided.* |
-| **include_tags** | List[str] or str<br>*Default: None* | *(Optional)* Specific concept/property tag names to consider when generating the query.<br>- If `None` or empty, no tags are used.<br>- If a single string or list of strings is provided, only those tags (if they exist) will be attached to the prompt.<br>- Use List of strings or a comma-separated string (e.g. `'tag1,tag2'`) to specify multiple tags.<br>- Use `'*'` to include **all** tags. |
-| **exclude_properties** | List[str] or str<br>*Default: None* | *(Optional)* Collection of properties to exclude from the query (List of strings, or a string of property names divided by comma. entity_id, entity_type & entity_label are excluded by default). |
-| **should_validate_sql** | bool<br>*Default: True* | Whether to validate the SQL before executing it. |
-| **retries** | int<br>*Default: 2* | Number of retry attempts if the generated SQL is invalid. |
-| **max_limit** | int<br>*Default: 100* | Maximum number of rows to return. |
-| **note** | str<br>*Default: None* | *(Optional)* Additional note to extend the LLM prompt. |
+| **llm** | LLM<br />*Required* | Language model instance (or a function taking a prompt string and returning an LLM's response). |
+| **url** | str<br />*Required* | Timbr server URL. |
+| **token** | str<br />*Required* | Timbr authentication token. |
+| **ontology** | str<br />*Required* | Name of the ontology/knowledge graph. |
+| **schema** | str<br />*Default: None*<br />*Optional* | Name of the schema to query. |
+| **concept** | str<br />*Default: None*<br />*Optional* | Name of a specific concept to query. |
+| **concepts_list** | List[str] or str<br />*Default: None*<br />*Optional* | Collection of concepts to include (List of strings, or a string of concept names divided by comma).<br />- If None, empty or '*', all available concepts are used.<br />- If populated, only those concepts will be included in query generation.<br />- If 'none' or 'null', no concepts will be used for the query. |
+| **views_list** | List[str] or str<br />*Default: None*<br />*Optional* | Collection of views/cubes to include (List of strings, or a string of view/cube names divided by comma).<br />- If None, empty or '*', all available views/cubes are used.<br />- If populated, only those views/cubes will be included in query generation.<br />- If 'none' or 'null', no views/cubes will be used for the query. |
+| **include_logic_concepts** | bool<br />*Default: False*<br />*Optional* | Whether to include logic concepts (concepts without unique properties which only inherit from an upper level concept with filter logic) in the query.<br />*Note: This parameter has no effect when `concepts_list` is provided.* |
+| **include_tags** | List[str] or str<br />*Default: None*<br />*Optional* | Specific concept/property tag names to consider when generating the query.<br />- If `None` or empty, no tags are used.<br />- If a single string or list of strings is provided, only those tags (if they exist) will be attached to the prompt.<br />- Use List of strings or a comma-separated string (e.g. `'tag1,tag2'`) to specify multiple tags.<br />- Use `'*'` to include **all** tags. |
+| **exclude_properties** | List[str] or str<br />*Default: None*<br />*Optional* | Collection of properties to exclude from the query (List of strings, or a string of property names divided by comma. entity_id, entity_type & entity_label are excluded by default). |
+| **should_validate_sql** | bool<br />*Default: True*<br />*Optional* | Whether to validate the SQL before executing it. |
+| **retries** | int<br />*Default: 2*<br />*Optional* | Number of retry attempts if the generated SQL is invalid. |
+| **max_limit** | int<br />*Default: 100*<br />*Optional* | Maximum number of rows to return. |
+| **retry_if_no_results** | bool<br />*Default: False*<br />*Optional* | Whether to infer the result value from the SQL query. If the query won't return any rows, it will try to re-generate the SQL query then re-run it. |
+| **no_results_max_retries** | int<br />*Default: 2*<br />*Optional* | Number of retry attempts to infer the result value from the SQL query. |
+| **note** | str<br />*Default: None*<br />*Optional* | Additional note to extend the LLM prompt. |
+| **db_is_case_sensitive** | bool<br />*Default: False*<br />*Optional* | Whether the database is case sensitive. |
+| **explicit_usage_metadata** | bool<br />*Default: False*<br />*Optional* | Whether to use 'usage_metadata' as the output key for usage metadata or with prefix of chain name |
 
 #### Create agent and use with AgentExecutor
 ```python
@@ -136,17 +141,21 @@ error = result.get("error", None)
 Returns the suggested concept to query based on the user question.
 
 **Parameters:**
+
 | Parameter | Type / Default | Description |
 |-----------|----------------|-------------|
-| **llm** | LLM<br>*Required* | Language model instance (or a function taking a prompt string and returning an LLM's response). |
-| **url** | str<br>*Required* | Timbr server URL. |
-| **token** | str<br>*Required* | Timbr authentication token. |
-| **ontology** | str<br>*Required* | Name of the ontology/knowledge graph. |
-| **concepts_list** | List[str] or str<br>*Default: None* | *(Optional)* Collection of concepts to include (List of strings, or a string of concept names divided by comma).<br>- If None, empty or '*', all available concepts are used.<br>- If populated, only those concepts will be included in query generation.<br>- If 'none' or 'null', no concepts will be used for the query. |
-| **views_list** | List[str] or str<br>*Default: None* | *(Optional)* Collection of views/cubes to include (List of strings, or a string of view/cube names divided by comma).<br>- If None, empty or '*', all available views/cubes are used.<br>- If populated, only those views/cubes will be included in query generation.<br>- If 'none' or 'null', no views/cubes will be used for the query. |
-| **include_logic_concepts** | bool<br>*Default: False* | *(Optional)* Whether to include logic concepts (concepts without unique properties which only inherit from an upper level concept with filter logic) in the query.<br>*Note: This parameter has no effect when `concepts_list` is provided.* |
-| **include_tags** | List[str] or str<br>*Default: None* | *(Optional)* Specific concept/property tag names to consider when generating the query.<br>- If `None` or empty, no tags are used.<br>- If a single string or list of strings is provided, only those tags (if they exist) will be attached to the prompt.<br>- Use List of strings or a comma-separated string (e.g. `'tag1,tag2'`) to specify multiple tags.<br>- Use `'*'` to include **all** tags. |
-| **note** | str<br>*Default: None* | *(Optional)* Additional note to extend the LLM prompt. |
+| **llm** | LLM<br />*Required* | Language model instance (or a function taking a prompt string and returning an LLM's response). |
+| **url** | str<br />*Required* | Timbr server URL. |
+| **token** | str<br />*Required* | Timbr authentication token. |
+| **ontology** | str<br />*Required* | Name of the ontology/knowledge graph. |
+| **concepts_list** | List[str] or str<br />*Default: None*<br />*Optional* | Collection of concepts to include (List of strings, or a string of concept names divided by comma).<br />- If None, empty or '*', all available concepts are used.<br />- If populated, only those concepts will be included in query generation.<br />- If 'none' or 'null', no concepts will be used for the query. |
+| **views_list** | List[str] or str<br />*Default: None*<br />*Optional* | Collection of views/cubes to include (List of strings, or a string of view/cube names divided by comma).<br />- If None, empty or '*', all available views/cubes are used.<br />- If populated, only those views/cubes will be included in query generation.<br />- If 'none' or 'null', no views/cubes will be used for the query. |
+| **include_logic_concepts** | bool<br />*Default: False*<br />*Optional* | Whether to include logic concepts (concepts without unique properties which only inherit from an upper level concept with filter logic) in the query.<br />*Note: This parameter has no effect when `concepts_list` is provided.* |
+| **include_tags** | List[str] or str<br />*Default: None*<br />*Optional* | Specific concept/property tag names to consider when generating the query.<br />- If `None` or empty, no tags are used.<br />- If a single string or list of strings is provided, only those tags (if they exist) will be attached to the prompt.<br />- Use List of strings or a comma-separated string (e.g. `'tag1,tag2'`) to specify multiple tags.<br />- Use `'*'` to include **all** tags. |
+| **should_validate_sql** | bool<br />*Default: True*<br />*Optional* | Whether to validate the identified concept before returning it. |
+| **retries** | int<br />*Default: 2*<br />*Optional* | Number of retry attempts if the identified concept is invalid. |
+| **note** | str<br />*Default: None*<br />*Optional* | Additional note to extend the LLM prompt. |
+| **explicit_usage_metadata** | bool<br />*Default: False*<br />*Optional* | Whether to use 'usage_metadata' as the output key for usage metadata or with prefix of chain name |
 
 ```python
 from langchain_timbr import IdentifyTimbrConceptChain
@@ -171,21 +180,24 @@ schema = result["schema"]
 Returns the suggested SQL based on the user question.
 
 **Parameters:**
+
 | Parameter | Type / Default | Description |
 |-----------|----------------|-------------|
-| **llm** | LLM<br>*Required* | Language model instance (or a function taking a prompt string and returning an LLM's response). |
-| **url** | str<br>*Required* | Timbr server URL. |
-| **token** | str<br>*Required* | Timbr authentication token. |
-| **ontology** | str<br>*Required* | Name of the ontology/knowledge graph. |
-| **schema** | str<br>*Default: None* | *(Optional)* Name of the schema to query. |
-| **concept** | str<br>*Default: None* | *(Optional)* Name of a specific concept to query. |
-| **concepts_list** | List[str] or str<br>*Default: None* | *(Optional)* Collection of concepts to include (List of strings, or a string of concept names divided by comma).<br>- If None, empty or '*', all available concepts are used.<br>- If populated, only those concepts will be included in query generation.<br>- If 'none' or 'null', no concepts will be used for the query. |
-| **views_list** | List[str] or str<br>*Default: None* | *(Optional)* Collection of views/cubes to include (List of strings, or a string of view/cube names divided by comma).<br>- If None, empty or '*', all available views/cubes are used.<br>- If populated, only those views/cubes will be included in query generation.<br>- If 'none' or 'null', no views/cubes will be used for the query. |
-| **include_logic_concepts** | bool<br>*Default: False* | *(Optional)* Whether to include logic concepts (concepts without unique properties which only inherit from an upper level concept with filter logic) in the query.<br>*Note: This parameter has no effect when `concepts_list` is provided.* |
-| **include_tags** | List[str] or str<br>*Default: None* | *(Optional)* Specific concept/property tag names to consider when generating the query.<br>- If `None` or empty, no tags are used.<br>- If a single string or list of strings is provided, only those tags (if they exist) will be attached to the prompt.<br>- Use List of strings or a comma-separated string (e.g. `'tag1,tag2'`) to specify multiple tags.<br>- Use `'*'` to include **all** tags. |
-| **exclude_properties** | List[str] or str<br>*Default: None* | *(Optional)* Collection of properties to exclude from the query (List of strings, or a string of property names divided by comma. entity_id, entity_type & entity_label are excluded by default). |
-| **max_limit** | int<br>*Default: 100* | Maximum number of rows to return. |
-| **note** | str<br>*Default: None* | *(Optional)* Additional note to extend the LLM prompt. |
+| **llm** | LLM<br />*Required* | Language model instance (or a function taking a prompt string and returning an LLM's response). |
+| **url** | str<br />*Required* | Timbr server URL. |
+| **token** | str<br />*Required* | Timbr authentication token. |
+| **ontology** | str<br />*Required* | Name of the ontology/knowledge graph. |
+| **schema** | str<br />*Default: None*<br />*Optional* | Name of the schema to query. |
+| **concept** | str<br />*Default: None*<br />*Optional* | Name of a specific concept to query. |
+| **concepts_list** | List[str] or str<br />*Default: None*<br />*Optional* | Collection of concepts to include (List of strings, or a string of concept names divided by comma).<br />- If None, empty or '*', all available concepts are used.<br />- If populated, only those concepts will be included in query generation.<br />- If 'none' or 'null', no concepts will be used for the query. |
+| **views_list** | List[str] or str<br />*Default: None*<br />*Optional* | Collection of views/cubes to include (List of strings, or a string of view/cube names divided by comma).<br />- If None, empty or '*', all available views/cubes are used.<br />- If populated, only those views/cubes will be included in query generation.<br />- If 'none' or 'null', no views/cubes will be used for the query. |
+| **include_logic_concepts** | bool<br />*Default: False*<br />*Optional* | Whether to include logic concepts (concepts without unique properties which only inherit from an upper level concept with filter logic) in the query.<br />*Note: This parameter has no effect when `concepts_list` is provided.* |
+| **include_tags** | List[str] or str<br />*Default: None*<br />*Optional* | Specific concept/property tag names to consider when generating the query.<br />- If `None` or empty, no tags are used.<br />- If a single string or list of strings is provided, only those tags (if they exist) will be attached to the prompt.<br />- Use List of strings or a comma-separated string (e.g. `'tag1,tag2'`) to specify multiple tags.<br />- Use `'*'` to include **all** tags. |
+| **exclude_properties** | List[str] or str<br />*Default: None*<br />*Optional* | Collection of properties to exclude from the query (List of strings, or a string of property names divided by comma. entity_id, entity_type & entity_label are excluded by default). |
+| **max_limit** | int<br />*Default: 100*<br />*Optional* | Maximum number of rows to return. |
+| **note** | str<br />*Default: None*<br />*Optional* | Additional note to extend the LLM prompt. |
+| **db_is_case_sensitive** | bool<br />*Default: False*<br />*Optional* | Whether the database is case sensitive. |
+| **explicit_usage_metadata** | bool<br />*Default: False*<br />*Optional* | Whether to use 'usage_metadata' as the output key for usage metadata or with prefix of chain name |
 
 ```python
 from langchain_timbr import GenerateTimbrSqlChain
@@ -213,22 +225,25 @@ schema = result["schema"]
 Validates the timbr SQL and re-generate a new one if necessary based on the user question.
 
 **Parameters:**
+
 | Parameter | Type / Default | Description |
 |-----------|----------------|-------------|
-| **llm** | LLM<br>*Required* | Language model instance (or a function taking a prompt string and returning an LLM's response). |
-| **url** | str<br>*Required* | Timbr server URL. |
-| **token** | str<br>*Required* | Timbr authentication token. |
-| **ontology** | str<br>*Required* | Name of the ontology/knowledge graph. |
-| **schema** | str<br>*Default: None* | *(Optional)* Name of the schema to query. |
-| **concept** | str<br>*Default: None* | *(Optional)* Name of a specific concept to query. |
-| **retries** | int<br>*Default: 2* | Number of retry attempts if the generated SQL is invalid. |
-| **concepts_list** | List[str] or str<br>*Default: None* | *(Optional)* Collection of concepts to include (List of strings, or a string of concept names divided by comma).<br>- If None, empty or '*', all available concepts are used.<br>- If populated, only those concepts will be included in query generation.<br>- If 'none' or 'null', no concepts will be used for the query. |
-| **views_list** | List[str] or str<br>*Default: None* | *(Optional)* Collection of views/cubes to include (List of strings, or a string of view/cube names divided by comma).<br>- If None, empty or '*', all available views/cubes are used.<br>- If populated, only those views/cubes will be included in query generation.<br>- If 'none' or 'null', no views/cubes will be used for the query. |
-| **include_logic_concepts** | bool<br>*Default: False* | *(Optional)* Whether to include logic concepts (concepts without unique properties which only inherit from an upper level concept with filter logic) in the query.<br>*Note: This parameter has no effect when `concepts_list` is provided.* |
-| **include_tags** | List[str] or str<br>*Default: None* | *(Optional)* Specific concept/property tag names to consider when generating the query.<br>- If `None` or empty, no tags are used.<br>- If a single string or list of strings is provided, only those tags (if they exist) will be attached to the prompt.<br>- Use List of strings or a comma-separated string (e.g. `'tag1,tag2'`) to specify multiple tags.<br>- Use `'*'` to include **all** tags. |
-| **exclude_properties** | List[str] or str<br>*Default: None* | *(Optional)* Collection of properties to exclude from the query (List of strings, or a string of property names divided by comma. entity_id, entity_type & entity_label are excluded by default). |
-| **max_limit** | int<br>*Default: 100* | Maximum number of rows to return. |
-| **note** | str<br>*Default: None* | *(Optional)* Additional note to extend the LLM prompt. |
+| **llm** | LLM<br />*Required* | Language model instance (or a function taking a prompt string and returning an LLM's response). |
+| **url** | str<br />*Required* | Timbr server URL. |
+| **token** | str<br />*Required* | Timbr authentication token. |
+| **ontology** | str<br />*Required* | Name of the ontology/knowledge graph. |
+| **schema** | str<br />*Default: None*<br />*Optional* | Name of the schema to query. |
+| **concept** | str<br />*Default: None*<br />*Optional* | Name of a specific concept to query. |
+| **retries** | int<br />*Default: 2*<br />*Optional* | Number of retry attempts if the generated SQL is invalid. |
+| **concepts_list** | List[str] or str<br />*Default: None*<br />*Optional* | Collection of concepts to include (List of strings, or a string of concept names divided by comma).<br />- If None, empty or '*', all available concepts are used.<br />- If populated, only those concepts will be included in query generation.<br />- If 'none' or 'null', no concepts will be used for the query. |
+| **views_list** | List[str] or str<br />*Default: None*<br />*Optional* | Collection of views/cubes to include (List of strings, or a string of view/cube names divided by comma).<br />- If None, empty or '*', all available views/cubes are used.<br />- If populated, only those views/cubes will be included in query generation.<br />- If 'none' or 'null', no views/cubes will be used for the query. |
+| **include_logic_concepts** | bool<br />*Default: False*<br />*Optional* | Whether to include logic concepts (concepts without unique properties which only inherit from an upper level concept with filter logic) in the query.<br />*Note: This parameter has no effect when `concepts_list` is provided.* |
+| **include_tags** | List[str] or str<br />*Default: None*<br />*Optional* | Specific concept/property tag names to consider when generating the query.<br />- If `None` or empty, no tags are used.<br />- If a single string or list of strings is provided, only those tags (if they exist) will be attached to the prompt.<br />- Use List of strings or a comma-separated string (e.g. `'tag1,tag2'`) to specify multiple tags.<br />- Use `'*'` to include **all** tags. |
+| **exclude_properties** | List[str] or str<br />*Default: None*<br />*Optional* | Collection of properties to exclude from the query (List of strings, or a string of property names divided by comma. entity_id, entity_type & entity_label are excluded by default). |
+| **max_limit** | int<br />*Default: 100*<br />*Optional* | Maximum number of rows to return. |
+| **note** | str<br />*Default: None*<br />*Optional* | Additional note to extend the LLM prompt. |
+| **db_is_case_sensitive** | bool<br />*Default: False*<br />*Optional* | Whether the database is case sensitive. |
+| **explicit_usage_metadata** | bool<br />*Default: False*<br />*Optional* | Whether to use 'usage_metadata' as the output key for usage metadata or with prefix of chain name |
 
 ```python
 from langchain_timbr import ValidateTimbrSqlChain
@@ -263,23 +278,28 @@ schema = result["schema"]
 Calls the Generate SQL Chain and executes the query in timbr. Returns the query results.
 
 **Parameters:**
+
 | Parameter | Type / Default | Description |
 |-----------|----------------|-------------|
-| **llm** | LLM<br>*Required* | Language model instance (or a function taking a prompt string and returning an LLM's response). |
-| **url** | str<br>*Required* | Timbr server URL. |
-| **token** | str<br>*Required* | Timbr authentication token. |
-| **ontology** | str<br>*Required* | Name of the ontology/knowledge graph. |
-| **schema** | str<br>*Default: None* | *(Optional)* Name of the schema to query. |
-| **concept** | str<br>*Default: None* | *(Optional)* Name of a specific concept to query. |
-| **concepts_list** | List[str] or str<br>*Default: None* | *(Optional)* Collection of concepts to include (List of strings, or a string of concept names divided by comma).<br>- If None, empty or '*', all available concepts are used.<br>- If populated, only those concepts will be included in query generation.<br>- If 'none' or 'null', no concepts will be used for the query. |
-| **views_list** | List[str] or str<br>*Default: None* | *(Optional)* Collection of views/cubes to include (List of strings, or a string of view/cube names divided by comma).<br>- If None, empty or '*', all available views/cubes are used.<br>- If populated, only those views/cubes will be included in query generation.<br>- If 'none' or 'null', no views/cubes will be used for the query. |
-| **include_logic_concepts** | bool<br>*Default: False* | *(Optional)* Whether to include logic concepts (concepts without unique properties which only inherit from an upper level concept with filter logic) in the query.<br>*Note: This parameter has no effect when `concepts_list` is provided.* |
-| **include_tags** | List[str] or str<br>*Default: None* | *(Optional)* Specific concept/property tag names to consider when generating the query.<br>- If `None` or empty, no tags are used.<br>- If a single string or list of strings is provided, only those tags (if they exist) will be attached to the prompt.<br>- Use List of strings or a comma-separated string (e.g. `'tag1,tag2'`) to specify multiple tags.<br>- Use `'*'` to include **all** tags. |
-| **exclude_properties** | List[str] or str<br>*Default: None* | *(Optional)* Collection of properties to exclude from the query (List of strings, or a string of property names divided by comma. entity_id, entity_type & entity_label are excluded by default). |
-| **should_validate_sql** | bool<br>*Default: True* | Whether to validate the SQL before executing it. |
-| **retries** | int<br>*Default: 2* | Number of retry attempts if the generated SQL is invalid. |
-| **max_limit** | int<br>*Default: 100* | Maximum number of rows to return. |
-| **note** | str<br>*Default: None* | *(Optional)* Additional note to extend the LLM prompt. |
+| **llm** | LLM<br />*Required* | Language model instance (or a function taking a prompt string and returning an LLM's response). |
+| **url** | str<br />*Required* | Timbr server URL. |
+| **token** | str<br />*Required* | Timbr authentication token. |
+| **ontology** | str<br />*Required* | Name of the ontology/knowledge graph. |
+| **schema** | str<br />*Default: None*<br />*Optional* | Name of the schema to query. |
+| **concept** | str<br />*Default: None*<br />*Optional* | Name of a specific concept to query. |
+| **concepts_list** | List[str] or str<br />*Default: None*<br />*Optional* | Collection of concepts to include (List of strings, or a string of concept names divided by comma).<br />- If None, empty or '*', all available concepts are used.<br />- If populated, only those concepts will be included in query generation.<br />- If 'none' or 'null', no concepts will be used for the query. |
+| **views_list** | List[str] or str<br />*Default: None*<br />*Optional* | Collection of views/cubes to include (List of strings, or a string of view/cube names divided by comma).<br />- If None, empty or '*', all available views/cubes are used.<br />- If populated, only those views/cubes will be included in query generation.<br />- If 'none' or 'null', no views/cubes will be used for the query. |
+| **include_logic_concepts** | bool<br />*Default: False*<br />*Optional* | Whether to include logic concepts (concepts without unique properties which only inherit from an upper level concept with filter logic) in the query.<br />*Note: This parameter has no effect when `concepts_list` is provided.* |
+| **include_tags** | List[str] or str<br />*Default: None*<br />*Optional* | Specific concept/property tag names to consider when generating the query.<br />- If `None` or empty, no tags are used.<br />- If a single string or list of strings is provided, only those tags (if they exist) will be attached to the prompt.<br />- Use List of strings or a comma-separated string (e.g. `'tag1,tag2'`) to specify multiple tags.<br />- Use `'*'` to include **all** tags. |
+| **exclude_properties** | List[str] or str<br />*Default: None*<br />*Optional* | Collection of properties to exclude from the query (List of strings, or a string of property names divided by comma. entity_id, entity_type & entity_label are excluded by default). |
+| **should_validate_sql** | bool<br />*Default: True*<br />*Optional* | Whether to validate the SQL before executing it. |
+| **retries** | int<br />*Default: 2*<br />*Optional* | Number of retry attempts if the generated SQL is invalid. |
+| **max_limit** | int<br />*Default: 100*<br />*Optional* | Maximum number of rows to return. |
+| **retry_if_no_results** | bool<br />*Default: False*<br />*Optional* | Whether to infer the result value from the SQL query. If the query won't return any rows, it will try to re-generate the SQL query then re-run it. |
+| **no_results_max_retries** | int<br />*Default: 2*<br />*Optional* | Number of retry attempts to infer the result value from the SQL query. |
+| **note** | str<br />*Default: None*<br />*Optional* | Additional note to extend the LLM prompt. |
+| **db_is_case_sensitive** | bool<br />*Default: False*<br />*Optional* | Whether the database is case sensitive. |
+| **explicit_usage_metadata** | bool<br />*Default: False*<br />*Optional* | Whether to use 'usage_metadata' as the output key for usage metadata or with prefix of chain name |
 
 ```python
 from langchain_timbr import ExecuteTimbrQueryChain
@@ -311,9 +331,11 @@ error = result.get("error", None)
 Generates answer based on the prompt and query results.
 
 **Parameters:**
+
 | Parameter | Type / Default | Description |
 |-----------|----------------|-------------|
-| **llm** | LLM<br>*Required* | Language model instance (or a function taking a prompt string and returning an LLM's response). |
+| **llm** | LLM<br />*Required* | Language model instance (or a function taking a prompt string and returning an LLM's response). |
+| **explicit_usage_metadata** | bool<br />*Default: False*<br />*Optional* | Whether to use 'usage_metadata' as the output key for usage metadata or with prefix of chain name |
 
 ```python
 from langchain_timbr import GenerateAnswerChain
@@ -370,11 +392,11 @@ llm_connector.set_ontology("your_ontology")
 
 ```python
 # Generate SQL for a user query
-sql_query = llm_connector.generate_sql("What are the total sales by region?")
+sql_query = llm_connector.generate_sql("What are the total sales by region?").get("sql")
 print("Generated SQL:", sql_query)
 
 # Run the query and fetch results
-data = llm_connector.run_timbr_query(sql_query)
+data = llm_connector.run_timbr_query(sql_query).get("rows")
 print("Query Results:", data)
 ```
 
@@ -382,8 +404,8 @@ print("Query Results:", data)
 
 ```python
 # Directly run a natural language query
-data = llm_connector.run_llm_query("What are the total sales for last month?")
-print("Results:", data)
+res = llm_connector.run_llm_query("What are the total sales for last month?")
+print("Results:", data.get["rows"])
 ```
 
 
