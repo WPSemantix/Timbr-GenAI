@@ -77,7 +77,6 @@ Create timbr SQL agent that wraps the pipeline to identify the relevant concept 
 | **no_results_max_retries** | int<br />*Default: 2*<br />*Optional* | Number of retry attempts to infer the result value from the SQL query. |
 | **note** | str<br />*Default: None*<br />*Optional* | Additional note to extend the LLM prompt. |
 | **db_is_case_sensitive** | bool<br />*Default: False*<br />*Optional* | Whether the database is case sensitive. |
-| **explicit_usage_metadata** | bool<br />*Default: False*<br />*Optional* | Whether to use 'usage_metadata' as the output key for usage metadata or with prefix of chain name |
 
 #### Create agent and use with AgentExecutor
 ```python
@@ -155,7 +154,7 @@ Returns the suggested concept to query based on the user question.
 | **should_validate_sql** | bool<br />*Default: True*<br />*Optional* | Whether to validate the identified concept before returning it. |
 | **retries** | int<br />*Default: 2*<br />*Optional* | Number of retry attempts if the identified concept is invalid. |
 | **note** | str<br />*Default: None*<br />*Optional* | Additional note to extend the LLM prompt. |
-| **explicit_usage_metadata** | bool<br />*Default: False*<br />*Optional* | Whether to use 'usage_metadata' as the output key for usage metadata or with prefix of chain name |
+| **explicit_usage_metadata** | bool<br />*Default: True*<br />*Optional* | Whether to use 'usage_metadata' as the output key for usage metadata or with prefix of chain name |
 
 ```python
 from langchain_timbr import IdentifyTimbrConceptChain
@@ -197,7 +196,7 @@ Returns the suggested SQL based on the user question.
 | **max_limit** | int<br />*Default: 100*<br />*Optional* | Maximum number of rows to return. |
 | **note** | str<br />*Default: None*<br />*Optional* | Additional note to extend the LLM prompt. |
 | **db_is_case_sensitive** | bool<br />*Default: False*<br />*Optional* | Whether the database is case sensitive. |
-| **explicit_usage_metadata** | bool<br />*Default: False*<br />*Optional* | Whether to use 'usage_metadata' as the output key for usage metadata or with prefix of chain name |
+| **explicit_usage_metadata** | bool<br />*Default: True*<br />*Optional* | Whether to use 'usage_metadata' as the output key for usage metadata or with prefix of chain name |
 
 ```python
 from langchain_timbr import GenerateTimbrSqlChain
@@ -243,7 +242,7 @@ Validates the timbr SQL and re-generate a new one if necessary based on the user
 | **max_limit** | int<br />*Default: 100*<br />*Optional* | Maximum number of rows to return. |
 | **note** | str<br />*Default: None*<br />*Optional* | Additional note to extend the LLM prompt. |
 | **db_is_case_sensitive** | bool<br />*Default: False*<br />*Optional* | Whether the database is case sensitive. |
-| **explicit_usage_metadata** | bool<br />*Default: False*<br />*Optional* | Whether to use 'usage_metadata' as the output key for usage metadata or with prefix of chain name |
+| **explicit_usage_metadata** | bool<br />*Default: True*<br />*Optional* | Whether to use 'usage_metadata' as the output key for usage metadata or with prefix of chain name |
 
 ```python
 from langchain_timbr import ValidateTimbrSqlChain
@@ -299,7 +298,7 @@ Calls the Generate SQL Chain and executes the query in timbr. Returns the query 
 | **no_results_max_retries** | int<br />*Default: 2*<br />*Optional* | Number of retry attempts to infer the result value from the SQL query. |
 | **note** | str<br />*Default: None*<br />*Optional* | Additional note to extend the LLM prompt. |
 | **db_is_case_sensitive** | bool<br />*Default: False*<br />*Optional* | Whether the database is case sensitive. |
-| **explicit_usage_metadata** | bool<br />*Default: False*<br />*Optional* | Whether to use 'usage_metadata' as the output key for usage metadata or with prefix of chain name |
+| **explicit_usage_metadata** | bool<br />*Default: True*<br />*Optional* | Whether to use 'usage_metadata' as the output key for usage metadata or with prefix of chain name |
 
 ```python
 from langchain_timbr import ExecuteTimbrQueryChain
@@ -335,7 +334,7 @@ Generates answer based on the prompt and query results.
 | Parameter | Type / Default | Description |
 |-----------|----------------|-------------|
 | **llm** | LLM<br />*Required* | Language model instance (or a function taking a prompt string and returning an LLM's response). |
-| **explicit_usage_metadata** | bool<br />*Default: False*<br />*Optional* | Whether to use 'usage_metadata' as the output key for usage metadata or with prefix of chain name |
+| **explicit_usage_metadata** | bool<br />*Default: True*<br />*Optional* | Whether to use 'usage_metadata' as the output key for usage metadata or with prefix of chain name |
 
 ```python
 from langchain_timbr import GenerateAnswerChain
