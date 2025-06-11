@@ -75,6 +75,7 @@ Create timbr SQL agent that wraps the pipeline to identify the relevant concept 
 | **max_limit** | int<br />*Default: 100*<br />*Optional* | Maximum number of rows to return. |
 | **retry_if_no_results** | bool<br />*Default: False*<br />*Optional* | Whether to infer the result value from the SQL query. If the query won't return any rows, it will try to re-generate the SQL query then re-run it. |
 | **no_results_max_retries** | int<br />*Default: 2*<br />*Optional* | Number of retry attempts to infer the result value from the SQL query. |
+| **generate_answer** | bool<br />*Default: False*<br />*Optional* | Whether to generate a natural language answer from the query results. |
 | **note** | str<br />*Default: None*<br />*Optional* | Additional note to extend the LLM prompt. |
 | **db_is_case_sensitive** | bool<br />*Default: False*<br />*Optional* | Whether the database is case sensitive. |
 
@@ -343,7 +344,8 @@ generate_answer_chain = GenerateAnswerChain(llm=<llm>)
 
 answer_result = generate_answer_chain.invoke({
     "prompt": "What are the total sales for last month?",
-    "rows": [{"total_sales": 1250000}]
+    "rows": [{"total_sales": 1250000}],
+    "sql": "SELECT COUNT(1) AS `total_sales` FROM `dtimbr`.`order`",
 })
 
 answer = answer_result["answer"]
