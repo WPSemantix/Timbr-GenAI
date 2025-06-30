@@ -109,6 +109,13 @@ sql = result["sql"]
 concept = result["concept"]
 schema = result["schema"]
 error = result.get("error", None)
+
+usage_metadata = result.get("usage_metadata", {})
+determine_concept_usage = usage_metadata.get('determine_concept', {})
+generate_sql_usage = usage_metadata.get('generate_sql', {})
+# Each usage_metadata item contains:
+# * 'approximate': Estimated token count calculated before invoking the LLM
+# * 'input_tokens'/'output_tokens'/'total_tokens'/etc.: Actual token usage metrics returned by the LLM
 ```
 
 #### Use create_timbr_sql_agent to get AgentExecutor instance and invoke directly
@@ -172,6 +179,12 @@ identify_timbr_concept_chain = IdentifyTimbrConceptChain(
 result = identify_timbr_concept_chain.invoke({ "prompt": "What are the total sales for last month?" })
 concept = result["concept"]
 schema = result["schema"]
+
+usage_metadata = result.get("identify_concept_usage_metadata", {})
+determine_concept_usage = usage_metadata.get('determine_concept', {})
+# Each usage_metadata item contains:
+# * 'approximate': Estimated token count calculated before invoking the LLM
+# * 'input_tokens'/'output_tokens'/'total_tokens'/etc.: Actual token usage metrics returned by the LLM
 ```
 
 ### Generate SQL Chain
@@ -216,6 +229,13 @@ result = generate_timbr_sql_chain.invoke({ "prompt": "What are the total sales f
 sql = result["sql"]
 concept = result["concept"]
 schema = result["schema"]
+
+usage_metadata = result.get("generate_sql_usage_metadata", {})
+determine_concept_usage = usage_metadata.get('determine_concept', {})
+generate_sql_usage = usage_metadata.get('generate_sql', {})
+# Each usage_metadata item contains:
+# * 'approximate': Estimated token count calculated before invoking the LLM
+# * 'input_tokens'/'output_tokens'/'total_tokens'/etc.: Actual token usage metrics returned by the LLM
 ```
 
 ### Validate SQL Chain
@@ -268,6 +288,13 @@ is_sql_valid = result["is_sql_valid"]
 error = result["error"]
 concept = result["concept"]
 schema = result["schema"]
+
+usage_metadata = result.get("validate_sql_usage_metadata", {})
+determine_concept_usage = usage_metadata.get('determine_concept', {})
+generate_sql_usage = usage_metadata.get('generate_sql', {})
+# Each usage_metadata item contains:
+# * 'approximate': Estimated token count calculated before invoking the LLM
+# * 'input_tokens'/'output_tokens'/'total_tokens'/etc.: Actual token usage metrics returned by the LLM
 ```
 
 ### Execute Query Chain
@@ -320,6 +347,13 @@ sql = result["sql"]
 concept = result["concept"]
 schema = result["schema"]
 error = result.get("error", None)
+
+usage_metadata = result.get("execute_timbr_usage_metadata", {})
+determine_concept_usage = usage_metadata.get('determine_concept', {})
+generate_sql_usage = usage_metadata.get('generate_sql', {})
+# Each usage_metadata item contains:
+# * 'approximate': Estimated token count calculated before invoking the LLM
+# * 'input_tokens'/'output_tokens'/'total_tokens'/etc.: Actual token usage metrics returned by the LLM
 ```
 
 ### Generate Answer Chain
@@ -344,6 +378,12 @@ answer_result = generate_answer_chain.invoke({
 })
 
 answer = answer_result["answer"]
+
+usage_metadata = result.get("generate_answer_usage_metadata", {})
+answer_question_usage = usage_metadata.get('answer_question', {})
+# Each usage_metadata item contains:
+# * 'approximate': Estimated token count calculated before invoking the LLM
+# * 'input_tokens'/'output_tokens'/'total_tokens'/etc.: Actual token usage metrics returned by the LLM
 ```
 
 ## Quick Start using timbr api
