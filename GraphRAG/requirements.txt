@@ -1,0 +1,11 @@
+streamlit>=1.30.0
+openai>=1.1.0
+python-dotenv>=1.0.0
+pytimbr-api>=1.0.8
+langchain>=0.1.0
+langchain-openai>=0.0.2
+requests>=2.31.0
+langchain-timbr
+snowflake-snowpark-python>=1.6.0
+snowflake>=0.8.0
+pyarrow<19.0.0
