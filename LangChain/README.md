@@ -63,60 +63,57 @@ You can launch the interactive Streamlit app to try out natural language queries
 
 ## Quick Start using Timbr API
 
-### 1. Initialize the LLM Wrapper
+### 1. Initialize LLM instance
 
 ```python
-from langchain_timbr import LlmWrapper, LlmTypes
+# Using OpenAI provider:
+from langchain_openai import ChatOpenAI
+llm = ChatOpenAI(
+    openai_api_key="<api_key>",
+    model_name="gpt-4o", # or any other preferred model
+)
 
-llm_wrapper = LlmWrapper(
-    llm_type=LlmTypes.OpenAI,
-    api_key="<your_api_key>",
-    model="gpt-model", # optional
-    # All other parameters will be forwarded directly to the LLM initializer (for example, temperature).
+# Using Anthropic provider:
+from langchain_anthropic import ChatAnthropic
+llm = Claude(
+    anthropic_api_key="<api_key>",
+    model="claude-sonnet-4-20250514", # or any other preferred model
+)
+
+# Or any other LLM provider as your wish as ChatGoogleGenerativeAI, ChatSnowflakeCortex, AzureChatOpenAI, etc.
+```
+
+### 2. Initialize timbr agent executor
+
+```python
+from langchain_timbr import TimbrSqlAgent
+
+agent_executor = create_timbr_sql_agent(
+    llm=llm,
+    url="https://your-timbr-app.com/",
+    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",
+    ontology="timbr_knowledge_graph",
+    schema="dtimbr",               # optional
+    concept="Sales",               # optional
+    concepts_list=["Sales","Orders","Customers"],  # optional
+    views_list=["sales_view"],     # optional
+    note="Focus on US region",     # optional
+    generate_answer=False,         # optional
 )
 ```
 
-### 2. Connect to Timbr
+### 3. Invoke agent with user question & fetch results
 
 ```python
-from langchain_timbr import TimbrLlmConnector
+result = agent_executor.invoke("What are the total sales for last month?")
 
-llm_connector = TimbrLlmConnector(
-    url="<timbr_url>",
-    token="<timbr_token>",
-    llm=llm_wrapper
-)
-```
-
-### 3. Work with Ontologies
-
-```python
-# Fetch available ontologies
-ontologies = llm_connector.get_ontologies()
-print("Available Ontologies:", ontologies)
-
-# Set the ontology to use
-llm_connector.set_ontology("your_ontology")
-```
-
-### 4. Generate SQL Queries and Fetch Results
-
-```python
-# Generate SQL for a user query
-sql_query = llm_connector.generate_sql("What are the total sales by region?").get("sql")
-print("Generated SQL:", sql_query)
-
-# Run the query and fetch results
-data = llm_connector.run_timbr_query(sql_query).get("rows")
-print("Query Results:", data)
-```
-
-### 5. Full Workflow with Natural Language Query
-
-```python
-# Directly run a natural language query
-res = llm_connector.run_llm_query("What are the total sales for last month?")
-print("Results:", res.get("rows"))
+answer = result["answer"] # Relevant when generate_answer is True
+rows = result["rows"]
+sql = result["sql"]
+schema = result["schema"]
+concept = result["concept"]
+user_metadata = result["user_metadata"] # Token usage metadata - estimated & from llm response
+error = result.get("error", None)
 ```
 
 ## LangChain interface
@@ -191,7 +188,7 @@ generate_sql_usage = usage_metadata.get('generate_sql', {})
 
 #### Use create_timbr_sql_agent to get AgentExecutor instance and invoke directly
 ```python
-from langchain_timbr import TimbrSqlAgent
+from langchain_timbr import create_timbr_sql_agent
 
 agent_executor = create_timbr_sql_agent(
     llm=<llm>,
