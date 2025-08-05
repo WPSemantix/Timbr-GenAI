@@ -280,6 +280,8 @@ Returns the suggested SQL based on the user question.
 | **include_logic_concepts** | bool<br />Default: False<br />**Optional** | Whether to include logic concepts (concepts without unique properties which only inherit from an upper level concept with filter logic) in the query.<br />*Note: This parameter has no effect when `concepts_list` is provided.* |
 | **include_tags** | List[str] or str<br />Default: None<br />**Optional** | Specific concept/property tag names to consider when generating the query.<br />- If `None` or empty, no tags are used.<br />- If a single string or list of strings is provided, only those tags (if they exist) will be attached to the prompt.<br />- Use List of strings or a comma-separated string (e.g. `'tag1,tag2'`) to specify multiple tags.<br />- Use `'*'` to include **all** tags. |
 | **exclude_properties** | List[str] or str<br />Default: None<br />**Optional** | Collection of properties to exclude from the query (List of strings, or a string of property names divided by comma. entity_id, entity_type & entity_label are excluded by default). |
+| **should_validate_sql** | bool<br />Default: True<br />**Optional** | Whether to validate the SQL before executing it. |
+| **retries** | int<br />Default: 2<br />**Optional** | Number of retry attempts if the generated SQL is invalid. |
 | **max_limit** | int<br />Default: 100<br />**Optional** | Maximum number of rows to return. |
 | **note** | str<br />Default: None<br />**Optional** | Additional note to extend the LLM prompt. |
 | **db_is_case_sensitive** | bool<br />Default: False<br />**Optional** | Whether the database is case sensitive. |
