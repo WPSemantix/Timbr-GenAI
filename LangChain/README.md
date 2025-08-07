@@ -453,6 +453,11 @@ Generates answer based on the prompt and query results.
 | Parameter | Type / Default | Description |
 |-----------|----------------|-------------|
 | **llm** | LLM<br />**Required** | Language model instance (or a function taking a prompt string and returning an LLM's response). |
+| **url** | str<br />**Required** | Timbr server URL. |
+| **token** | str<br />**Required** | Timbr authentication token. |
+| **verify_ssl** | bool<br />Default: True<br />**Optional** | Whether to verify SSL certificates. |
+| **is_jwt** | bool<br />Default: False<br />**Optional** | Whether to use JWT authentication. |
+| **jwt_tenant_id** | str<br />Default: None<br />**Optional** | Tenant ID for JWT authentication (if applicable). |
 
 ```python
 from langchain_timbr import GenerateAnswerChain
