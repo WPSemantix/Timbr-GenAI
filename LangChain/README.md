@@ -149,6 +149,7 @@ Create a Timbr SQL agent that wraps the pipeline to identify the relevant concep
 | **verify_ssl** | bool<br />Default: True<br />**Optional** | Whether to verify SSL certificates. |
 | **is_jwt** | bool<br />Default: False<br />**Optional** | Whether to use JWT authentication. |
 | **jwt_tenant_id** | str<br />Default: None<br />**Optional** | Tenant ID for JWT authentication (if applicable). |
+| **conn_params** | dict<br />Default: None<br />**Optional** | Extra Timbr connection parameters sent with every request (e.g., 'x-api-impersonate-user'). |
 
 #### Create agent and use with AgentExecutor
 ```python
@@ -236,6 +237,7 @@ Returns the suggested concept to query based on the user question.
 | **verify_ssl** | bool<br />Default: True<br />**Optional** | Whether to verify SSL certificates. |
 | **is_jwt** | bool<br />Default: False<br />**Optional** | Whether to use JWT authentication. |
 | **jwt_tenant_id** | str<br />Default: None<br />**Optional** | Tenant ID for JWT authentication (if applicable). |
+| **conn_params** | dict<br />Default: None<br />**Optional** | Extra Timbr connection parameters sent with every request (e.g., 'x-api-impersonate-user'). |
 
 ```python
 from langchain_timbr import IdentifyTimbrConceptChain
@@ -289,6 +291,7 @@ Returns the suggested SQL based on the user question.
 | **verify_ssl** | bool<br />Default: True<br />**Optional** | Whether to verify SSL certificates. |
 | **is_jwt** | bool<br />Default: False<br />**Optional** | Whether to use JWT authentication. |
 | **jwt_tenant_id** | str<br />Default: None<br />**Optional** | Tenant ID for JWT authentication (if applicable). |
+| **conn_params** | dict<br />Default: None<br />**Optional** | Extra Timbr connection parameters sent with every request (e.g., 'x-api-impersonate-user'). |
 
 ```python
 from langchain_timbr import GenerateTimbrSqlChain
@@ -345,6 +348,7 @@ Validates the timbr SQL and re-generate a new one if necessary based on the user
 | **verify_ssl** | bool<br />Default: True<br />**Optional** | Whether to verify SSL certificates. |
 | **is_jwt** | bool<br />Default: False<br />**Optional** | Whether to use JWT authentication. |
 | **jwt_tenant_id** | str<br />Default: None<br />**Optional** | Tenant ID for JWT authentication (if applicable). |
+| **conn_params** | dict<br />Default: None<br />**Optional** | Extra Timbr connection parameters sent with every request (e.g., 'x-api-impersonate-user'). |
 
 ```python
 from langchain_timbr import ValidateTimbrSqlChain
@@ -411,6 +415,7 @@ Calls the Generate SQL Chain and executes the query in timbr. Returns the query 
 | **verify_ssl** | bool<br />Default: True<br />**Optional** | Whether to verify SSL certificates. |
 | **is_jwt** | bool<br />Default: False<br />**Optional** | Whether to use JWT authentication. |
 | **jwt_tenant_id** | str<br />Default: None<br />**Optional** | Tenant ID for JWT authentication (if applicable). |
+| **conn_params** | dict<br />Default: None<br />**Optional** | Extra Timbr connection parameters sent with every request (e.g., 'x-api-impersonate-user'). |
 
 ```python
 from langchain_timbr import ExecuteTimbrQueryChain
@@ -458,6 +463,7 @@ Generates answer based on the prompt and query results.
 | **verify_ssl** | bool<br />Default: True<br />**Optional** | Whether to verify SSL certificates. |
 | **is_jwt** | bool<br />Default: False<br />**Optional** | Whether to use JWT authentication. |
 | **jwt_tenant_id** | str<br />Default: None<br />**Optional** | Tenant ID for JWT authentication (if applicable). |
+| **conn_params** | dict<br />Default: None<br />**Optional** | Extra Timbr connection parameters sent with every request (e.g., 'x-api-impersonate-user'). |
 
 ```python
 from langchain_timbr import GenerateAnswerChain
