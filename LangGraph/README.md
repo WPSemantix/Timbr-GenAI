@@ -32,7 +32,17 @@ To use this SDK, ensure you have the following:
   openai==1.77.0
   ```
 
-**Important:** You must install the **timbr-langchain** package manually. **Request from your Timbr account manager the `pip install` command for the timbr-langchain library.**
+## Installation
+
+### Using pip
+```bash
+python -m pip install langchain-timbr
+```
+
+## Install with selected LLM providers (One of: openai,anthropic,google,snowflake)
+```bash
+python -m pip install 'langchain-timbr[<your selected providers, separated by comma w/o space]'
+```
 
 ## Directory Structure and Key Files
 
