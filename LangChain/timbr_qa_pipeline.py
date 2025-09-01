@@ -14,7 +14,11 @@ execute_timbr_query_chain = ExecuteTimbrQueryChain(
     ontology='timbr_knowledge_graph',
 )
 
-generate_answer_chain = GenerateAnswerChain(llm=llm)
+generate_answer_chain = GenerateAnswerChain(
+    llm=llm,
+    url='https://your-timbr-app.com/',
+    token='tk_XXXXXXXXXXXXXXXXXXXXXXXX',
+)
 
 pipeline = SequentialChain(
     chains=[execute_timbr_query_chain, generate_answer_chain],

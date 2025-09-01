@@ -112,7 +112,7 @@ def graph_query(myquestion: str, context: str = None) -> tuple:
                         note="Please use snowflake sql functions"
     )
 
-    generate_answer_chain = GenerateAnswerChain(llm=llm)
+    generate_answer_chain = GenerateAnswerChain(llm=llm, url=timbr_url, token=timbr_token)
 
     pipeline = SequentialChain(
                     chains=[execute_timbr_query_chain, generate_answer_chain],

@@ -96,7 +96,7 @@ llm = Claude(
 ### 2. Initialize timbr agent executor
 
 ```python
-from langchain_timbr import TimbrSqlAgent
+from langchain_timbr import create_timbr_sql_agent
 
 agent_executor = create_timbr_sql_agent(
     llm=llm,
@@ -478,7 +478,11 @@ Generates answer based on the prompt and query results.
 ```python
 from langchain_timbr import GenerateAnswerChain
 
-generate_answer_chain = GenerateAnswerChain(llm=<llm>)
+generate_answer_chain = GenerateAnswerChain(
+    llm=<llm>,
+    url="https://your-timbr-app.com/",
+    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",
+)
 
 answer_result = generate_answer_chain.invoke({
     "prompt": "What are the total sales for last month?",
