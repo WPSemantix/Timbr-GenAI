@@ -45,19 +45,37 @@ python -m pip install 'langchain-timbr[<your selected providers, separated by co
 
 ## Configuration
 
-All chains, agents, and nodes support environment-based configuration. You can set the following environment variables to provide default values:
+All chains, agents, and nodes support optional environment-based configuration. You can set the following environment variables to provide default values and have easy setup for the provided tools:
 
+### Timbr Connection Parameters
 - **TIMBR_URL**: Default Timbr server URL
 - **TIMBR_TOKEN**: Default Timbr authentication token  
 - **TIMBR_ONTOLOGY** or **ONTOLOGY**: Default ontology/knowledge graph name
 
 When these environment variables are set, the corresponding parameters (`url`, `token`, `ontology`) become optional in all chain and agent constructors and will use the environment values as defaults.
 
+### LLM Configuration Parameters
+- **LLM_TYPE**: The type of LLM provider (One of langchain_timbr LlmTypes enum: 'openai-chat', 'anthropic-chat', 'chat-google-generative-ai', 'azure-openai-chat', 'snowflake-cortex', 'chat-databricks')
+- **LLM_API_KEY**: The API key for authenticating with the LLM provider
+- **LLM_MODEL**: The model name or deployment to use
+- **LLM_TEMPERATURE**: Temperature setting for the LLM
+- **LLM_ADDITIONAL_PARAMS**: Additional parameters as dict or JSON string
+
+When LLM environment variables are set, the `llm` parameter becomes optional and will use the `LlmWrapper` with environment configuration.
+
 Example environment setup:
 ```bash
+# Timbr connection
 export TIMBR_URL="https://your-timbr-app.com/"
 export TIMBR_TOKEN="tk_XXXXXXXXXXXXXXXXXXXXXXXX"
 export TIMBR_ONTOLOGY="timbr_knowledge_graph"
+
+# LLM configuration
+export LLM_TYPE="openai-chat"
+export LLM_API_KEY="your-openai-api-key"
+export LLM_MODEL="gpt-4o"
+export LLM_TEMPERATURE="0.1"
+export LLM_ADDITIONAL_PARAMS='{"max_tokens": 1000}'
 ```
 
 ## Features
@@ -159,7 +177,7 @@ Create a Timbr SQL agent that wraps the pipeline to identify the relevant concep
 
 | Parameter | Type / Default | Description |
 |-----------|----------------|-------------|
-| **llm** | LLM<br />**Required** | Language model instance (or a function taking a prompt string and returning an LLM's response). |
+| **llm** | LLM<br />Default: None<br />**Optional** | Language model instance (or a function taking a prompt string and returning an LLM's response). If None, uses `LlmWrapper` with environment variables. |
 | **url** | str<br />Default: None<br />**Optional** | Timbr server URL. If None, uses the value from the `TIMBR_URL` environment variable. |
 | **token** | str<br />Default: None<br />**Optional** | Timbr authentication token. If None, uses the value from the `TIMBR_TOKEN` environment variable. |
 | **ontology** | str<br />Default: None<br />**Optional** | Name of the ontology/knowledge graph. If None, uses the value from the `TIMBR_ONTOLOGY` or `ONTOLOGY` environment variable. |
@@ -189,7 +207,8 @@ Create a Timbr SQL agent that wraps the pipeline to identify the relevant concep
 from langchain_timbr import TimbrSqlAgent
 
 agent = TimbrSqlAgent(
-    llm=<llm>,
+    # llm is optional if LLM environment variables are set
+    llm=<llm>,  # Optional: uses LlmWrapper with env vars if not specified
     # url, token, ontology are optional if environment variables are set
     url="https://your-timbr-app.com/",  # Optional: uses TIMBR_URL if not specified
     token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # Optional: uses TIMBR_TOKEN if not specified
@@ -229,10 +248,11 @@ generate_sql_usage = usage_metadata.get('generate_sql', {})
 from langchain_timbr import create_timbr_sql_agent
 
 agent_executor = create_timbr_sql_agent(
-    llm=<llm>,
-    url="https://your-timbr-app.com/",
-    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",
-    ontology="timbr_knowledge_graph",
+    llm=<llm>,                     # optional - if not provided, uses LlmWrapper with environment variables
+    # url, token, ontology are optional if environment variables are set
+    url="https://your-timbr-app.com/",  # Optional: uses TIMBR_URL if not specified
+    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # Optional: uses TIMBR_TOKEN if not specified
+    ontology="timbr_knowledge_graph",  # Optional: uses TIMBR_ONTOLOGY/ONTOLOGY if not specified
     schema="dtimbr",               # optional
     concept="Sales",               # optional
     concepts_list=["Sales","Orders","Customers"],  # optional
@@ -257,7 +277,7 @@ Returns the suggested concept to query based on the user question.
 
 | Parameter | Type / Default | Description |
 |-----------|----------------|-------------|
-| **llm** | LLM<br />**Required** | Language model instance (or a function taking a prompt string and returning an LLM's response). |
+| **llm** | LLM<br />Default: None<br />**Optional** | Language model instance (or a function taking a prompt string and returning an LLM's response). If None, uses `LlmWrapper` with environment variables. |
 | **url** | str<br />Default: None<br />**Optional** | Timbr server URL. If None, uses the value from the `TIMBR_URL` environment variable. |
 | **token** | str<br />Default: None<br />**Optional** | Timbr authentication token. If None, uses the value from the `TIMBR_TOKEN` environment variable. |
 | **ontology** | str<br />Default: None<br />**Optional** | Name of the ontology/knowledge graph. If None, uses the value from the `TIMBR_ONTOLOGY` or `ONTOLOGY` environment variable. |
@@ -277,7 +297,8 @@ Returns the suggested concept to query based on the user question.
 from langchain_timbr import IdentifyTimbrConceptChain
 
 identify_timbr_concept_chain = IdentifyTimbrConceptChain(
-    llm=<llm>,
+    # llm is optional if LLM environment variables are set
+    llm=<llm>,  # Optional: uses LlmWrapper with env vars if not specified
     # url, token, ontology are optional if environment variables are set
     url="https://your-timbr-app.com/",  # Optional: uses TIMBR_URL if not specified
     token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # Optional: uses TIMBR_TOKEN if not specified
@@ -306,7 +327,7 @@ Returns the suggested SQL based on the user question.
 
 | Parameter | Type / Default | Description |
 |-----------|----------------|-------------|
-| **llm** | LLM<br />**Required** | Language model instance (or a function taking a prompt string and returning an LLM's response). |
+| **llm** | LLM<br />Default: None<br />**Optional** | Language model instance (or a function taking a prompt string and returning an LLM's response). If None, uses `LlmWrapper` with environment variables. |
 | **url** | str<br />Default: None<br />**Optional** | Timbr server URL. If None, uses the value from the `TIMBR_URL` environment variable. |
 | **token** | str<br />Default: None<br />**Optional** | Timbr authentication token. If None, uses the value from the `TIMBR_TOKEN` environment variable. |
 | **ontology** | str<br />Default: None<br />**Optional** | Name of the ontology/knowledge graph. If None, uses the value from the `TIMBR_ONTOLOGY` or `ONTOLOGY` environment variable. |
@@ -332,7 +353,8 @@ Returns the suggested SQL based on the user question.
 from langchain_timbr import GenerateTimbrSqlChain
 
 generate_timbr_sql_chain = GenerateTimbrSqlChain(
-    llm=<llm>,
+    # llm is optional if LLM environment variables are set
+    llm=<llm>,  # Optional: uses LlmWrapper with env vars if not specified
     # url, token, ontology are optional if environment variables are set
     url="https://your-timbr-app.com/",  # Optional: uses TIMBR_URL if not specified
     token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # Optional: uses TIMBR_TOKEN if not specified
@@ -365,7 +387,7 @@ Validates the timbr SQL and re-generate a new one if necessary based on the user
 
 | Parameter | Type / Default | Description |
 |-----------|----------------|-------------|
-| **llm** | LLM<br />**Required** | Language model instance (or a function taking a prompt string and returning an LLM's response). |
+| **llm** | LLM<br />Default: None<br />**Optional** | Language model instance (or a function taking a prompt string and returning an LLM's response). If None, uses `LlmWrapper` with environment variables. |
 | **url** | str<br />Default: None<br />**Optional** | Timbr server URL. If None, uses the value from the `TIMBR_URL` environment variable. |
 | **token** | str<br />Default: None<br />**Optional** | Timbr authentication token. If None, uses the value from the `TIMBR_TOKEN` environment variable. |
 | **ontology** | str<br />Default: None<br />**Optional** | Name of the ontology/knowledge graph. If None, uses the value from the `TIMBR_ONTOLOGY` or `ONTOLOGY` environment variable. |
@@ -390,7 +412,7 @@ Validates the timbr SQL and re-generate a new one if necessary based on the user
 from langchain_timbr import ValidateTimbrSqlChain
 
 validate_timbr_sql_chain = ValidateTimbrSqlChain(
-    llm=<llm>,
+    llm=<llm>,  # Optional: uses LlmWrapper with env vars if not specified
     # url, token, ontology are optional if environment variables are set
     url="https://your-timbr-app.com/",  # Optional: uses TIMBR_URL if not specified
     token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # Optional: uses TIMBR_TOKEN if not specified
@@ -430,7 +452,7 @@ Calls the Generate SQL Chain and executes the query in timbr. Returns the query 
 
 | Parameter | Type / Default | Description |
 |-----------|----------------|-------------|
-| **llm** | LLM<br />**Required** | Language model instance (or a function taking a prompt string and returning an LLM's response). |
+| **llm** | LLM<br />Default: None<br />**Optional** | Language model instance (or a function taking a prompt string and returning an LLM's response). If None, uses `LlmWrapper` with environment variables. |
 | **url** | str<br />Default: None<br />**Optional** | Timbr server URL. If None, uses the value from the `TIMBR_URL` environment variable. |
 | **token** | str<br />Default: None<br />**Optional** | Timbr authentication token. If None, uses the value from the `TIMBR_TOKEN` environment variable. |
 | **ontology** | str<br />Default: None<br />**Optional** | Name of the ontology/knowledge graph. If None, uses the value from the `TIMBR_ONTOLOGY` or `ONTOLOGY` environment variable. |
@@ -458,7 +480,7 @@ Calls the Generate SQL Chain and executes the query in timbr. Returns the query 
 from langchain_timbr import ExecuteTimbrQueryChain
 
 execute_timbr_query_chain = ExecuteTimbrQueryChain(
-    llm=<llm>,
+    llm=<llm>,  # Optional: uses LlmWrapper with env vars if not specified
     # url, token, ontology are optional if environment variables are set
     url="https://your-timbr-app.com/",  # Optional: uses TIMBR_URL if not specified
     token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # Optional: uses TIMBR_TOKEN if not specified
@@ -495,7 +517,7 @@ Generates answer based on the prompt and query results.
 
 | Parameter | Type / Default | Description |
 |-----------|----------------|-------------|
-| **llm** | LLM<br />**Required** | Language model instance (or a function taking a prompt string and returning an LLM's response). |
+| **llm** | LLM<br />Default: None<br />**Optional** | Language model instance (or a function taking a prompt string and returning an LLM's response). If None, uses `LlmWrapper` with environment variables. |
 | **url** | str<br />Default: None<br />**Optional** | Timbr server URL. If None, uses the value from the `TIMBR_URL` environment variable. |
 | **token** | str<br />Default: None<br />**Optional** | Timbr authentication token. If None, uses the value from the `TIMBR_TOKEN` environment variable. |
 | **verify_ssl** | bool<br />Default: True<br />**Optional** | Whether to verify SSL certificates. |
@@ -507,7 +529,7 @@ Generates answer based on the prompt and query results.
 from langchain_timbr import GenerateAnswerChain
 
 generate_answer_chain = GenerateAnswerChain(
-    llm=<llm>,
+    llm=<llm>,  # Optional: uses LlmWrapper with env vars if not specified
     # url, token are optional if environment variables are set
     url="https://your-timbr-app.com/",  # Optional: uses TIMBR_URL if not specified
     token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # Optional: uses TIMBR_TOKEN if not specified
