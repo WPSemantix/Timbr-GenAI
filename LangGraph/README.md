@@ -42,7 +42,7 @@ python -m pip install langchain-timbr
 ## Install with selected LLM providers
 ### One of: openai, anthropic, google, azure_openai, snowflake, databricks (or 'all')
 ```bash
-python -m pip install 'langchain-timbr[<your selected providers, separated by comma w/o space]'
+python -m pip install 'langchain-timbr[<your selected providers, separated by comma w/o space>]'
 ```
 
 ## Configuration
@@ -133,11 +133,11 @@ from langchain_timbr import IdentifyConceptNode
 
 llm_instance = <your_llm_instance>  # Replace with your actual LLM instance (optional)
 identify_node = IdentifyConceptNode(
-    llm=llm_instance,  # Optional: uses LlmWrapper with env vars if not specified
+    llm=llm_instance,  # optional: uses LlmWrapper with env vars if not specified
     # url, token, ontology are optional if environment variables are set
-    url="https://your-timbr-app.com/",  # Optional: uses TIMBR_URL if not specified
-    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # Optional: uses TIMBR_TOKEN if not specified
-    ontology="timbr_knowledge_graph",  # Optional: uses TIMBR_ONTOLOGY/ONTOLOGY if not specified
+    url="https://your-timbr-app.com/",  # optional: uses TIMBR_URL if not specified
+    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # optional: uses TIMBR_TOKEN if not specified
+    ontology="timbr_knowledge_graph",  # optional: uses TIMBR_ONTOLOGY/ONTOLOGY if not specified
     concepts_list=["Sales", "Orders"],
     views_list=["sales_view"]
 )
@@ -186,11 +186,11 @@ from langchain_timbr import GenerateTimbrSqlNode
 
 llm_instance = <your_llm_instance>  # Replace with your actual LLM instance (optional)
 generate_sql_node = GenerateTimbrSqlNode(
-    llm=llm_instance,  # Optional: uses LlmWrapper with env vars if not specified
+    llm=llm_instance,  # optional: uses LlmWrapper with env vars if not specified
     # url, token, ontology are optional if environment variables are set
-    url="https://your-timbr-app.com/",  # Optional: uses TIMBR_URL if not specified
-    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # Optional: uses TIMBR_TOKEN if not specified
-    ontology="timbr_knowledge_graph",  # Optional: uses TIMBR_ONTOLOGY/ONTOLOGY if not specified
+    url="https://your-timbr-app.com/",  # optional: uses TIMBR_URL if not specified
+    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # optional: uses TIMBR_TOKEN if not specified
+    ontology="timbr_knowledge_graph",  # optional: uses TIMBR_ONTOLOGY/ONTOLOGY if not specified
     schema="dtimbr",
     concept="Sales"
 )
@@ -238,11 +238,11 @@ from langchain_timbr import ValidateSemanticSqlNode
 
 llm_instance = <your_llm_instance>  # Replace with your actual LLM instance (optional)
 validate_sql_node = ValidateSemanticSqlNode(
-    llm=llm_instance,  # Optional: uses LlmWrapper with env vars if not specified
+    llm=llm_instance,  # optional: uses LlmWrapper with env vars if not specified
     # url, token, ontology are optional if environment variables are set
-    url="https://your-timbr-app.com/",  # Optional: uses TIMBR_URL if not specified
-    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # Optional: uses TIMBR_TOKEN if not specified
-    ontology="timbr_knowledge_graph",  # Optional: uses TIMBR_ONTOLOGY/ONTOLOGY if not specified
+    url="https://your-timbr-app.com/",  # optional: uses TIMBR_URL if not specified
+    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # optional: uses TIMBR_TOKEN if not specified
+    ontology="timbr_knowledge_graph",  # optional: uses TIMBR_ONTOLOGY/ONTOLOGY if not specified
     schema="dtimbr",
     concept="Sales",
     retries=3
@@ -295,11 +295,11 @@ from langchain_timbr import ExecuteSemanticQueryNode
 
 llm_instance = <your_llm_instance>  # Replace with your actual LLM instance (optional)
 execute_query_node = ExecuteSemanticQueryNode(
-    llm=llm_instance,  # Optional: uses LlmWrapper with env vars if not specified
+    llm=llm_instance,  # optional: uses LlmWrapper with env vars if not specified
     # url, token, ontology are optional if environment variables are set
-    url="https://your-timbr-app.com/",  # Optional: uses TIMBR_URL if not specified
-    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # Optional: uses TIMBR_TOKEN if not specified
-    ontology="timbr_knowledge_graph",  # Optional: uses TIMBR_ONTOLOGY/ONTOLOGY if not specified
+    url="https://your-timbr-app.com/",  # optional: uses TIMBR_URL if not specified
+    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # optional: uses TIMBR_TOKEN if not specified
+    ontology="timbr_knowledge_graph",  # optional: uses TIMBR_ONTOLOGY/ONTOLOGY if not specified
     schema="dtimbr",
     concept="Sales"
 )
@@ -334,10 +334,10 @@ from langchain_timbr import GenerateResponseNode
 
 llm_instance = <your_llm_instance>  # Replace with your actual LLM instance (optional)
 response_node = GenerateResponseNode(
-    llm=llm_instance,  # Optional: uses LlmWrapper with env vars if not specified
+    llm=llm_instance,  # optional: uses LlmWrapper with env vars if not specified
     # url, token are optional if environment variables are set
-    url="https://your-timbr-app.com/",  # Optional: uses TIMBR_URL if not specified
-    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # Optional: uses TIMBR_TOKEN if not specified
+    url="https://your-timbr-app.com/",  # optional: uses TIMBR_URL if not specified
+    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # optional: uses TIMBR_TOKEN if not specified
 )
 
 state = StateGraph()

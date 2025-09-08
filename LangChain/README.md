@@ -40,7 +40,7 @@ python -m pip install langchain-timbr
 ### One of: openai, anthropic, google, azure_openai, snowflake, databricks (or 'all')
 
 ```bash
-python -m pip install 'langchain-timbr[<your selected providers, separated by comma w/o space]'
+python -m pip install 'langchain-timbr[<your selected providers, separated by comma w/o space>]'
 ```
 
 ## Configuration
@@ -50,7 +50,7 @@ All chains, agents, and nodes support optional environment-based configuration. 
 ### Timbr Connection Parameters
 - **TIMBR_URL**: Default Timbr server URL
 - **TIMBR_TOKEN**: Default Timbr authentication token  
-- **TIMBR_ONTOLOGY** or **ONTOLOGY**: Default ontology/knowledge graph name
+- **TIMBR_ONTOLOGY**: Default ontology/knowledge graph name
 
 When these environment variables are set, the corresponding parameters (`url`, `token`, `ontology`) become optional in all chain and agent constructors and will use the environment values as defaults.
 
@@ -180,7 +180,7 @@ Create a Timbr SQL agent that wraps the pipeline to identify the relevant concep
 | **llm** | LLM<br />Default: None<br />**Optional** | Language model instance (or a function taking a prompt string and returning an LLM's response). If None, uses `LlmWrapper` with environment variables. |
 | **url** | str<br />Default: None<br />**Optional** | Timbr server URL. If None, uses the value from the `TIMBR_URL` environment variable. |
 | **token** | str<br />Default: None<br />**Optional** | Timbr authentication token. If None, uses the value from the `TIMBR_TOKEN` environment variable. |
-| **ontology** | str<br />Default: None<br />**Optional** | Name of the ontology/knowledge graph. If None, uses the value from the `TIMBR_ONTOLOGY` or `ONTOLOGY` environment variable. |
+| **ontology** | str<br />Default: None<br />**Optional** | Name of the ontology/knowledge graph. If None, uses the value from the `TIMBR_ONTOLOGY` environment variable. |
 | **schema** | str<br />Default: None<br />**Optional** | Name of the schema to query. |
 | **concept** | str<br />Default: None<br />**Optional** | Name of a specific concept to query. |
 | **concepts_list** | List[str] or str<br />Default: None<br />**Optional** | Collection of concepts to include (List of strings, or a string of concept names divided by comma).<br />- If None, empty or '*', all available concepts are used.<br />- If populated, only those concepts will be included in query generation.<br />- If 'none' or 'null', no concepts will be used for the query. |
@@ -208,11 +208,11 @@ from langchain_timbr import TimbrSqlAgent
 
 agent = TimbrSqlAgent(
     # llm is optional if LLM environment variables are set
-    llm=<llm>,  # Optional: uses LlmWrapper with env vars if not specified
+    llm=<llm>,  # optional:  uses LlmWrapper with env vars if not specified
     # url, token, ontology are optional if environment variables are set
-    url="https://your-timbr-app.com/",  # Optional: uses TIMBR_URL if not specified
-    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # Optional: uses TIMBR_TOKEN if not specified
-    ontology="timbr_knowledge_graph",  # Optional: uses TIMBR_ONTOLOGY/ONTOLOGY if not specified
+    url="https://your-timbr-app.com/",  # optional:  uses TIMBR_URL if not specified
+    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # optional:  uses TIMBR_TOKEN if not specified
+    ontology="timbr_knowledge_graph",  # optional:  uses TIMBR_ONTOLOGY/ONTOLOGY if not specified
     schema="dtimbr",               # optional
     concept="Sales",               # optional
     concepts_list=["Sales","Orders","Customers"],  # optional
@@ -250,9 +250,9 @@ from langchain_timbr import create_timbr_sql_agent
 agent_executor = create_timbr_sql_agent(
     llm=<llm>,                     # optional - if not provided, uses LlmWrapper with environment variables
     # url, token, ontology are optional if environment variables are set
-    url="https://your-timbr-app.com/",  # Optional: uses TIMBR_URL if not specified
-    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # Optional: uses TIMBR_TOKEN if not specified
-    ontology="timbr_knowledge_graph",  # Optional: uses TIMBR_ONTOLOGY/ONTOLOGY if not specified
+    url="https://your-timbr-app.com/",  # optional:  uses TIMBR_URL if not specified
+    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # optional:  uses TIMBR_TOKEN if not specified
+    ontology="timbr_knowledge_graph",  # optional:  uses TIMBR_ONTOLOGY/ONTOLOGY if not specified
     schema="dtimbr",               # optional
     concept="Sales",               # optional
     concepts_list=["Sales","Orders","Customers"],  # optional
@@ -280,7 +280,7 @@ Returns the suggested concept to query based on the user question.
 | **llm** | LLM<br />Default: None<br />**Optional** | Language model instance (or a function taking a prompt string and returning an LLM's response). If None, uses `LlmWrapper` with environment variables. |
 | **url** | str<br />Default: None<br />**Optional** | Timbr server URL. If None, uses the value from the `TIMBR_URL` environment variable. |
 | **token** | str<br />Default: None<br />**Optional** | Timbr authentication token. If None, uses the value from the `TIMBR_TOKEN` environment variable. |
-| **ontology** | str<br />Default: None<br />**Optional** | Name of the ontology/knowledge graph. If None, uses the value from the `TIMBR_ONTOLOGY` or `ONTOLOGY` environment variable. |
+| **ontology** | str<br />Default: None<br />**Optional** | Name of the ontology/knowledge graph. If None, uses the value from the `TIMBR_ONTOLOGY` environment variable. |
 | **concepts_list** | List[str] or str<br />Default: None<br />**Optional** | Collection of concepts to include (List of strings, or a string of concept names divided by comma).<br />- If None, empty or '*', all available concepts are used.<br />- If populated, only those concepts will be included in query generation.<br />- If 'none' or 'null', no concepts will be used for the query. |
 | **views_list** | List[str] or str<br />Default: None<br />**Optional** | Collection of views/cubes to include (List of strings, or a string of view/cube names divided by comma).<br />- If None, empty or '*', all available views/cubes are used.<br />- If populated, only those views/cubes will be included in query generation.<br />- If 'none' or 'null', no views/cubes will be used for the query. |
 | **include_logic_concepts** | bool<br />Default: False<br />**Optional** | Whether to include logic concepts (concepts without unique properties which only inherit from an upper level concept with filter logic) in the query.<br />*Note: This parameter has no effect when `concepts_list` is provided.* |
@@ -298,11 +298,11 @@ from langchain_timbr import IdentifyTimbrConceptChain
 
 identify_timbr_concept_chain = IdentifyTimbrConceptChain(
     # llm is optional if LLM environment variables are set
-    llm=<llm>,  # Optional: uses LlmWrapper with env vars if not specified
+    llm=<llm>,  # optional:  uses LlmWrapper with env vars if not specified
     # url, token, ontology are optional if environment variables are set
-    url="https://your-timbr-app.com/",  # Optional: uses TIMBR_URL if not specified
-    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # Optional: uses TIMBR_TOKEN if not specified
-    ontology="timbr_knowledge_graph",  # Optional: uses TIMBR_ONTOLOGY/ONTOLOGY if not specified
+    url="https://your-timbr-app.com/",  # optional:  uses TIMBR_URL if not specified
+    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # optional:  uses TIMBR_TOKEN if not specified
+    ontology="timbr_knowledge_graph",  # optional:  uses TIMBR_ONTOLOGY/ONTOLOGY if not specified
     concepts_list=["Sales","Orders"],  # optional
     views_list=["sales_view"],         # optional
     note="Focus on last month's data"  # optional
@@ -330,7 +330,7 @@ Returns the suggested SQL based on the user question.
 | **llm** | LLM<br />Default: None<br />**Optional** | Language model instance (or a function taking a prompt string and returning an LLM's response). If None, uses `LlmWrapper` with environment variables. |
 | **url** | str<br />Default: None<br />**Optional** | Timbr server URL. If None, uses the value from the `TIMBR_URL` environment variable. |
 | **token** | str<br />Default: None<br />**Optional** | Timbr authentication token. If None, uses the value from the `TIMBR_TOKEN` environment variable. |
-| **ontology** | str<br />Default: None<br />**Optional** | Name of the ontology/knowledge graph. If None, uses the value from the `TIMBR_ONTOLOGY` or `ONTOLOGY` environment variable. |
+| **ontology** | str<br />Default: None<br />**Optional** | Name of the ontology/knowledge graph. If None, uses the value from the `TIMBR_ONTOLOGY` environment variable. |
 | **schema** | str<br />Default: None<br />**Optional** | Name of the schema to query. |
 | **concept** | str<br />Default: None<br />**Optional** | Name of a specific concept to query. |
 | **concepts_list** | List[str] or str<br />Default: None<br />**Optional** | Collection of concepts to include (List of strings, or a string of concept names divided by comma).<br />- If None, empty or '*', all available concepts are used.<br />- If populated, only those concepts will be included in query generation.<br />- If 'none' or 'null', no concepts will be used for the query. |
@@ -354,11 +354,11 @@ from langchain_timbr import GenerateTimbrSqlChain
 
 generate_timbr_sql_chain = GenerateTimbrSqlChain(
     # llm is optional if LLM environment variables are set
-    llm=<llm>,  # Optional: uses LlmWrapper with env vars if not specified
+    llm=<llm>,  # optional:  uses LlmWrapper with env vars if not specified
     # url, token, ontology are optional if environment variables are set
-    url="https://your-timbr-app.com/",  # Optional: uses TIMBR_URL if not specified
-    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # Optional: uses TIMBR_TOKEN if not specified
-    ontology="timbr_knowledge_graph",  # Optional: uses TIMBR_ONTOLOGY/ONTOLOGY if not specified
+    url="https://your-timbr-app.com/",  # optional:  uses TIMBR_URL if not specified
+    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # optional:  uses TIMBR_TOKEN if not specified
+    ontology="timbr_knowledge_graph",  # optional:  uses TIMBR_ONTOLOGY/ONTOLOGY if not specified
     schema="dtimbr",      # optional
     concept="Sales",      # optional
     concepts_list=["Sales","Orders"],  # optional
@@ -390,7 +390,7 @@ Validates the timbr SQL and re-generate a new one if necessary based on the user
 | **llm** | LLM<br />Default: None<br />**Optional** | Language model instance (or a function taking a prompt string and returning an LLM's response). If None, uses `LlmWrapper` with environment variables. |
 | **url** | str<br />Default: None<br />**Optional** | Timbr server URL. If None, uses the value from the `TIMBR_URL` environment variable. |
 | **token** | str<br />Default: None<br />**Optional** | Timbr authentication token. If None, uses the value from the `TIMBR_TOKEN` environment variable. |
-| **ontology** | str<br />Default: None<br />**Optional** | Name of the ontology/knowledge graph. If None, uses the value from the `TIMBR_ONTOLOGY` or `ONTOLOGY` environment variable. |
+| **ontology** | str<br />Default: None<br />**Optional** | Name of the ontology/knowledge graph. If None, uses the value from the `TIMBR_ONTOLOGY` environment variable. |
 | **schema** | str<br />Default: None<br />**Optional** | Name of the schema to query. |
 | **concept** | str<br />Default: None<br />**Optional** | Name of a specific concept to query. |
 | **retries** | int<br />Default: 2<br />**Optional** | Number of retry attempts if the generated SQL is invalid. |
@@ -412,11 +412,11 @@ Validates the timbr SQL and re-generate a new one if necessary based on the user
 from langchain_timbr import ValidateTimbrSqlChain
 
 validate_timbr_sql_chain = ValidateTimbrSqlChain(
-    llm=<llm>,  # Optional: uses LlmWrapper with env vars if not specified
+    llm=<llm>,  # optional:  uses LlmWrapper with env vars if not specified
     # url, token, ontology are optional if environment variables are set
-    url="https://your-timbr-app.com/",  # Optional: uses TIMBR_URL if not specified
-    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # Optional: uses TIMBR_TOKEN if not specified
-    ontology="timbr_knowledge_graph",  # Optional: uses TIMBR_ONTOLOGY/ONTOLOGY if not specified
+    url="https://your-timbr-app.com/",  # optional:  uses TIMBR_URL if not specified
+    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # optional:  uses TIMBR_TOKEN if not specified
+    ontology="timbr_knowledge_graph",  # optional:  uses TIMBR_ONTOLOGY/ONTOLOGY if not specified
     schema="dtimbr",               # optional
     concept="Sales",               # optional
     concepts_list=["Sales","Orders"],  # optional
@@ -455,7 +455,7 @@ Calls the Generate SQL Chain and executes the query in timbr. Returns the query 
 | **llm** | LLM<br />Default: None<br />**Optional** | Language model instance (or a function taking a prompt string and returning an LLM's response). If None, uses `LlmWrapper` with environment variables. |
 | **url** | str<br />Default: None<br />**Optional** | Timbr server URL. If None, uses the value from the `TIMBR_URL` environment variable. |
 | **token** | str<br />Default: None<br />**Optional** | Timbr authentication token. If None, uses the value from the `TIMBR_TOKEN` environment variable. |
-| **ontology** | str<br />Default: None<br />**Optional** | Name of the ontology/knowledge graph. If None, uses the value from the `TIMBR_ONTOLOGY` or `ONTOLOGY` environment variable. |
+| **ontology** | str<br />Default: None<br />**Optional** | Name of the ontology/knowledge graph. If None, uses the value from the `TIMBR_ONTOLOGY` environment variable. |
 | **schema** | str<br />Default: None<br />**Optional** | Name of the schema to query. |
 | **concept** | str<br />Default: None<br />**Optional** | Name of a specific concept to query. |
 | **concepts_list** | List[str] or str<br />Default: None<br />**Optional** | Collection of concepts to include (List of strings, or a string of concept names divided by comma).<br />- If None, empty or '*', all available concepts are used.<br />- If populated, only those concepts will be included in query generation.<br />- If 'none' or 'null', no concepts will be used for the query. |
@@ -480,11 +480,11 @@ Calls the Generate SQL Chain and executes the query in timbr. Returns the query 
 from langchain_timbr import ExecuteTimbrQueryChain
 
 execute_timbr_query_chain = ExecuteTimbrQueryChain(
-    llm=<llm>,  # Optional: uses LlmWrapper with env vars if not specified
+    llm=<llm>,  # optional:  uses LlmWrapper with env vars if not specified
     # url, token, ontology are optional if environment variables are set
-    url="https://your-timbr-app.com/",  # Optional: uses TIMBR_URL if not specified
-    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # Optional: uses TIMBR_TOKEN if not specified
-    ontology="timbr_knowledge_graph",  # Optional: uses TIMBR_ONTOLOGY/ONTOLOGY if not specified
+    url="https://your-timbr-app.com/",  # optional:  uses TIMBR_URL if not specified
+    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # optional:  uses TIMBR_TOKEN if not specified
+    ontology="timbr_knowledge_graph",  # optional:  uses TIMBR_ONTOLOGY/ONTOLOGY if not specified
     schema="dtimbr",              # optional
     concept="Sales",              # optional
     concepts_list=["Sales","Orders"],  # optional
@@ -529,10 +529,10 @@ Generates answer based on the prompt and query results.
 from langchain_timbr import GenerateAnswerChain
 
 generate_answer_chain = GenerateAnswerChain(
-    llm=<llm>,  # Optional: uses LlmWrapper with env vars if not specified
+    llm=<llm>,  # optional:  uses LlmWrapper with env vars if not specified
     # url, token are optional if environment variables are set
-    url="https://your-timbr-app.com/",  # Optional: uses TIMBR_URL if not specified
-    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # Optional: uses TIMBR_TOKEN if not specified
+    url="https://your-timbr-app.com/",  # optional:  uses TIMBR_URL if not specified
+    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # optional:  uses TIMBR_TOKEN if not specified
 )
 
 answer_result = generate_answer_chain.invoke({
