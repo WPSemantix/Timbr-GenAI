@@ -42,24 +42,42 @@ python -m pip install langchain-timbr
 ## Install with selected LLM providers
 ### One of: openai, anthropic, google, azure_openai, snowflake, databricks (or 'all')
 ```bash
-python -m pip install 'langchain-timbr[<your selected providers, separated by comma w/o space]'
+python -m pip install 'langchain-timbr[<your selected providers, separated by comma w/o space>]'
 ```
 
 ## Configuration
 
-All chains, agents, and nodes support environment-based configuration. You can set the following environment variables to provide default values:
+All chains, agents, and nodes support optional environment-based configuration. You can set the following environment variables to provide default values and have easy setup for the provided tools:
 
+**Timbr Connection Variables:**
 - **TIMBR_URL**: Default Timbr server URL
 - **TIMBR_TOKEN**: Default Timbr authentication token  
 - **TIMBR_ONTOLOGY** or **ONTOLOGY**: Default ontology/knowledge graph name
 
-When these environment variables are set, the corresponding parameters (`url`, `token`, `ontology`) become optional in all node constructors and will use the environment values as defaults.
+When these environment variables are set, the corresponding parameters (`url`, `token`, `ontology`) become optional in all chain and agent constructors and will use the environment values as defaults.
+
+**LLM Configuration Variables:**
+- **LLM_TYPE**: Type of LLM to use (e.g., "openai", "anthropic", "azure_openai", "google", "snowflake", "databricks", "timbr")
+- **LLM_API_KEY**: API key for the LLM provider
+- **LLM_MODEL**: Model name to use (e.g., "gpt-4o", "claude-3-5-sonnet-20241022")
+- **LLM_TEMPERATURE**: Temperature setting for the LLM (default: 0.1)
+- **LLM_ADDITIONAL_PARAMS**: Additional parameters as JSON string (e.g., '{"max_tokens": 1000}')
+
+When LLM environment variables are set, the `llm` parameter becomes optional and will use the `LlmWrapper` with environment configuration.
 
 Example environment setup:
 ```bash
+# Timbr connection
 export TIMBR_URL="https://your-timbr-app.com/"
 export TIMBR_TOKEN="tk_XXXXXXXXXXXXXXXXXXXXXXXX"
 export TIMBR_ONTOLOGY="timbr_knowledge_graph"
+
+# LLM configuration
+export LLM_TYPE="openai-chat"
+export LLM_API_KEY="your-openai-api-key"
+export LLM_MODEL="gpt-4o"
+export LLM_TEMPERATURE="0.1"
+export LLM_ADDITIONAL_PARAMS='{"max_tokens": 1000}'
 ```
 
 ## Directory Structure and Key Files
@@ -91,11 +109,8 @@ Wraps the **IdentifyTimbrConceptChain** functionality to identify the relevant c
 **Parameters:**
 
 | Parameter | Type / Default | Description |
-|-----------|----------------|----**Parameters:**
-
-| Parameter | Type / Default | Description |
 |-----------|----------------|-------------|
-| **llm** | LLM<br />**Required** | Language model instance (or a function taking a prompt string and returning an LLM's response). |
+| **llm** | LLM<br />Default: None<br />**Optional** | Language model instance (or a function taking a prompt string and returning an LLM's response). If None, uses `LlmWrapper` with environment variables. |
 | **url** | str<br />Default: None<br />**Optional** | Timbr server URL. If None, uses the value from the `TIMBR_URL` environment variable. |
 | **token** | str<br />Default: None<br />**Optional** | Timbr authentication token. If None, uses the value from the `TIMBR_TOKEN` environment variable. |
 | **ontology** | str<br />Default: None<br />**Optional** | Name of the ontology/knowledge graph. If None, uses the value from the `TIMBR_ONTOLOGY` or `ONTOLOGY` environment variable. |
@@ -116,13 +131,13 @@ Wraps the **IdentifyTimbrConceptChain** functionality to identify the relevant c
 from langgraph.graph import StateGraph
 from langchain_timbr import IdentifyConceptNode
 
-llm_instance = <your_llm_instance>  # Replace with your actual LLM instance
+llm_instance = <your_llm_instance>  # Replace with your actual LLM instance (optional)
 identify_node = IdentifyConceptNode(
-    llm=llm_instance,
+    llm=llm_instance,  # optional: uses LlmWrapper with env vars if not specified
     # url, token, ontology are optional if environment variables are set
-    url="https://your-timbr-app.com/",  # Optional: uses TIMBR_URL if not specified
-    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # Optional: uses TIMBR_TOKEN if not specified
-    ontology="timbr_knowledge_graph",  # Optional: uses TIMBR_ONTOLOGY/ONTOLOGY if not specified
+    url="https://your-timbr-app.com/",  # optional: uses TIMBR_URL if not specified
+    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # optional: uses TIMBR_TOKEN if not specified
+    ontology="timbr_knowledge_graph",  # optional: uses TIMBR_ONTOLOGY/ONTOLOGY if not specified
     concepts_list=["Sales", "Orders"],
     views_list=["sales_view"]
 )
@@ -142,7 +157,7 @@ Wraps the **GenerateTimbrSqlChain** functionality to generate SQL from a natural
 
 | Parameter | Type / Default | Description |
 |-----------|----------------|-------------|
-| **llm** | LLM<br />**Required** | Language model instance (or a function taking a prompt string and returning an LLM's response). |
+| **llm** | LLM<br />Default: None<br />**Optional** | Language model instance (or a function taking a prompt string and returning an LLM's response). If None, uses `LlmWrapper` with environment variables. |
 | **url** | str<br />Default: None<br />**Optional** | Timbr server URL. If None, uses the value from the `TIMBR_URL` environment variable. |
 | **token** | str<br />Default: None<br />**Optional** | Timbr authentication token. If None, uses the value from the `TIMBR_TOKEN` environment variable. |
 | **ontology** | str<br />Default: None<br />**Optional** | Name of the ontology/knowledge graph. If None, uses the value from the `TIMBR_ONTOLOGY` or `ONTOLOGY` environment variable. |
@@ -169,13 +184,13 @@ Wraps the **GenerateTimbrSqlChain** functionality to generate SQL from a natural
 from langgraph.graph import StateGraph
 from langchain_timbr import GenerateTimbrSqlNode
 
-llm_instance = <your_llm_instance>  # Replace with your actual LLM instance
+llm_instance = <your_llm_instance>  # Replace with your actual LLM instance (optional)
 generate_sql_node = GenerateTimbrSqlNode(
-    llm=llm_instance,
+    llm=llm_instance,  # optional: uses LlmWrapper with env vars if not specified
     # url, token, ontology are optional if environment variables are set
-    url="https://your-timbr-app.com/",  # Optional: uses TIMBR_URL if not specified
-    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # Optional: uses TIMBR_TOKEN if not specified
-    ontology="timbr_knowledge_graph",  # Optional: uses TIMBR_ONTOLOGY/ONTOLOGY if not specified
+    url="https://your-timbr-app.com/",  # optional: uses TIMBR_URL if not specified
+    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # optional: uses TIMBR_TOKEN if not specified
+    ontology="timbr_knowledge_graph",  # optional: uses TIMBR_ONTOLOGY/ONTOLOGY if not specified
     schema="dtimbr",
     concept="Sales"
 )
@@ -195,7 +210,7 @@ Wraps the **ValidateTimbrSqlChain** functionality to validate (and optionally ad
 
 | Parameter | Type / Default | Description |
 |-----------|----------------|-------------|
-| **llm** | LLM<br />**Required** | Language model instance (or a function taking a prompt string and returning an LLM's response). |
+| **llm** | LLM<br />Default: None<br />**Optional** | Language model instance (or a function taking a prompt string and returning an LLM's response). If None, uses `LlmWrapper` with environment variables. |
 | **url** | str<br />Default: None<br />**Optional** | Timbr server URL. If None, uses the value from the `TIMBR_URL` environment variable. |
 | **token** | str<br />Default: None<br />**Optional** | Timbr authentication token. If None, uses the value from the `TIMBR_TOKEN` environment variable. |
 | **ontology** | str<br />Default: None<br />**Optional** | Name of the ontology/knowledge graph. If None, uses the value from the `TIMBR_ONTOLOGY` or `ONTOLOGY` environment variable. |
@@ -221,13 +236,13 @@ Wraps the **ValidateTimbrSqlChain** functionality to validate (and optionally ad
 from langgraph.graph import StateGraph
 from langchain_timbr import ValidateSemanticSqlNode
 
-llm_instance = <your_llm_instance>  # Replace with your actual LLM instance
+llm_instance = <your_llm_instance>  # Replace with your actual LLM instance (optional)
 validate_sql_node = ValidateSemanticSqlNode(
-    llm=llm_instance,
+    llm=llm_instance,  # optional: uses LlmWrapper with env vars if not specified
     # url, token, ontology are optional if environment variables are set
-    url="https://your-timbr-app.com/",  # Optional: uses TIMBR_URL if not specified
-    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # Optional: uses TIMBR_TOKEN if not specified
-    ontology="timbr_knowledge_graph",  # Optional: uses TIMBR_ONTOLOGY/ONTOLOGY if not specified
+    url="https://your-timbr-app.com/",  # optional: uses TIMBR_URL if not specified
+    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # optional: uses TIMBR_TOKEN if not specified
+    ontology="timbr_knowledge_graph",  # optional: uses TIMBR_ONTOLOGY/ONTOLOGY if not specified
     schema="dtimbr",
     concept="Sales",
     retries=3
@@ -249,7 +264,7 @@ Wraps the **ExecuteTimbrQueryChain** functionality to execute the generated SQL 
 
 | Parameter | Type / Default | Description |
 |-----------|----------------|-------------|
-| **llm** | LLM<br />**Required** | Language model instance (or a function taking a prompt string and returning an LLM's response). |
+| **llm** | LLM<br />Default: None<br />**Optional** | Language model instance (or a function taking a prompt string and returning an LLM's response). If None, uses `LlmWrapper` with environment variables. |
 | **url** | str<br />Default: None<br />**Optional** | Timbr server URL. If None, uses the value from the `TIMBR_URL` environment variable. |
 | **token** | str<br />Default: None<br />**Optional** | Timbr authentication token. If None, uses the value from the `TIMBR_TOKEN` environment variable. |
 | **ontology** | str<br />Default: None<br />**Optional** | Name of the ontology/knowledge graph. If None, uses the value from the `TIMBR_ONTOLOGY` or `ONTOLOGY` environment variable. |
@@ -278,13 +293,13 @@ Wraps the **ExecuteTimbrQueryChain** functionality to execute the generated SQL 
 from langgraph.graph import StateGraph
 from langchain_timbr import ExecuteSemanticQueryNode
 
-llm_instance = <your_llm_instance>  # Replace with your actual LLM instance
+llm_instance = <your_llm_instance>  # Replace with your actual LLM instance (optional)
 execute_query_node = ExecuteSemanticQueryNode(
-    llm=llm_instance,
+    llm=llm_instance,  # optional: uses LlmWrapper with env vars if not specified
     # url, token, ontology are optional if environment variables are set
-    url="https://your-timbr-app.com/",  # Optional: uses TIMBR_URL if not specified
-    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # Optional: uses TIMBR_TOKEN if not specified
-    ontology="timbr_knowledge_graph",  # Optional: uses TIMBR_ONTOLOGY/ONTOLOGY if not specified
+    url="https://your-timbr-app.com/",  # optional: uses TIMBR_URL if not specified
+    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # optional: uses TIMBR_TOKEN if not specified
+    ontology="timbr_knowledge_graph",  # optional: uses TIMBR_ONTOLOGY/ONTOLOGY if not specified
     schema="dtimbr",
     concept="Sales"
 )
@@ -304,7 +319,7 @@ Wraps the **GenerateAnswerChain** functionality to answer based on the prompt an
 
 | Parameter | Type / Default | Description |
 |-----------|----------------|-------------|
-| **llm** | LLM<br />**Required** | Language model instance (or a function taking a prompt string and returning an LLM's response). |
+| **llm** | LLM<br />Default: None<br />**Optional** | Language model instance (or a function taking a prompt string and returning an LLM's response). If None, uses `LlmWrapper` with environment variables. |
 | **url** | str<br />Default: None<br />**Optional** | Timbr server URL. If None, uses the value from the `TIMBR_URL` environment variable. |
 | **token** | str<br />Default: None<br />**Optional** | Timbr authentication token. If None, uses the value from the `TIMBR_TOKEN` environment variable. |
 | **verify_ssl** | bool<br />Default: True<br />**Optional** | Whether to verify SSL certificates. |
@@ -317,12 +332,12 @@ Wraps the **GenerateAnswerChain** functionality to answer based on the prompt an
 from langgraph.graph import StateGraph
 from langchain_timbr import GenerateResponseNode
 
-llm_instance = <your_llm_instance>  # Replace with your actual LLM instance
+llm_instance = <your_llm_instance>  # Replace with your actual LLM instance (optional)
 response_node = GenerateResponseNode(
-    llm=llm_instance,
+    llm=llm_instance,  # optional: uses LlmWrapper with env vars if not specified
     # url, token are optional if environment variables are set
-    url="https://your-timbr-app.com/",  # Optional: uses TIMBR_URL if not specified
-    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # Optional: uses TIMBR_TOKEN if not specified
+    url="https://your-timbr-app.com/",  # optional: uses TIMBR_URL if not specified
+    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # optional: uses TIMBR_TOKEN if not specified
 )
 
 state = StateGraph()
@@ -344,14 +359,22 @@ When environment variables are properly configured, you can simplify node creati
 # With environment variables set (TIMBR_URL, TIMBR_TOKEN, TIMBR_ONTOLOGY)
 # you can create nodes with minimal parameters
 
-llm_instance = <your_llm_instance>
+# Simplified node creation - uses timbr environment variables
+llm_instance = <your_llm_instance>  # Optional - can be omitted if LLM env vars are set
 
-# Simplified node creation - uses environment variables
 identify_node = IdentifyConceptNode(llm=llm_instance)
 generate_sql_node = GenerateTimbrSqlNode(llm=llm_instance)
 validate_sql_node = ValidateSemanticSqlNode(llm=llm_instance)
 execute_query_node = ExecuteSemanticQueryNode(llm=llm_instance)
 response_node = GenerateResponseNode(llm=llm_instance)
+
+
+# Simplified node creation - uses llm & timbr environment variables
+identify_node = IdentifyConceptNode()
+generate_sql_node = GenerateTimbrSqlNode()
+validate_sql_node = ValidateSemanticSqlNode()
+execute_query_node = ExecuteSemanticQueryNode()
+response_node = GenerateResponseNode()
 ```
 
 This approach is ideal for production environments where connection parameters are managed through environment configuration.
