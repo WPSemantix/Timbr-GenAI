@@ -17,6 +17,7 @@ To use this SDK, ensure you have the following:
 
 - **Python Version**: Python 3.9+
 - **Required Dependencies**:
+
   ```bash
   langchain==0.3.25
   langchain_community==0.3.20
@@ -24,7 +25,9 @@ To use this SDK, ensure you have the following:
   pytimbr-api>=1.0.8
   pydantic==2.10.4
   ```
+
 - **Optional Dependencies (Depending on LLM provider)**:
+
   ```bash
   langchain-anthropic==0.3.1
   anthropic==0.42.0
@@ -35,12 +38,15 @@ To use this SDK, ensure you have the following:
 ## Installation
 
 ### Using pip
+
 ```bash
 python -m pip install langchain-timbr
 ```
 
 ## Install with selected LLM providers
-### One of: openai, anthropic, google, azure_openai, snowflake, databricks (or 'all')
+
+### One of: openai, anthropic, google, azure_openai, snowflake, databricks, vertex_ai (or 'all')
+
 ```bash
 python -m pip install 'langchain-timbr[<your selected providers, separated by comma w/o space>]'
 ```
@@ -50,6 +56,7 @@ python -m pip install 'langchain-timbr[<your selected providers, separated by co
 All chains, agents, and nodes support optional environment-based configuration. You can set the following environment variables to provide default values and have easy setup for the provided tools:
 
 **Timbr Connection Variables:**
+
 - **TIMBR_URL**: Default Timbr server URL
 - **TIMBR_TOKEN**: Default Timbr authentication token  
 - **TIMBR_ONTOLOGY** or **ONTOLOGY**: Default ontology/knowledge graph name
@@ -57,7 +64,8 @@ All chains, agents, and nodes support optional environment-based configuration. 
 When these environment variables are set, the corresponding parameters (`url`, `token`, `ontology`) become optional in all chain and agent constructors and will use the environment values as defaults.
 
 **LLM Configuration Variables:**
-- **LLM_TYPE**: Type of LLM to use (e.g., "openai", "anthropic", "azure_openai", "google", "snowflake", "databricks", "timbr")
+
+- **LLM_TYPE**: Type of LLM to use (e.g., "openai", "anthropic", "azure_openai", "google", "snowflake", "databricks", "chat-vertexai", "timbr")
 - **LLM_API_KEY**: API key for the LLM provider
 - **LLM_MODEL**: Model name to use (e.g., "gpt-4o", "claude-3-5-sonnet-20241022")
 - **LLM_TEMPERATURE**: Temperature setting for the LLM (default: 0.1)
@@ -66,6 +74,7 @@ When these environment variables are set, the corresponding parameters (`url`, `
 When LLM environment variables are set, the `llm` parameter becomes optional and will use the `LlmWrapper` with environment configuration.
 
 Example environment setup:
+
 ```bash
 # Timbr connection
 export TIMBR_URL="https://your-timbr-app.com/"
@@ -95,7 +104,7 @@ You can use these files as templates to build your own custom graph-based agents
 
 ## Features
 
-- **Multi-LLM Support**: Integrates with OpenAI GPT, Anthropic Claude, Google Gemini, Databricks DBRX/llama, Snowflake Cortex, and Timbr's native LLM (or any custom LLM using the LangChain interface)
+- **Multi-LLM Support**: Integrates with OpenAI GPT, Anthropic Claude, Google Gemini, Databricks DBRX/llama, Snowflake Cortex, Google VertexAI and Timbr's native LLM (or any custom LLM using the LangChain interface)
 - **SQL Generation**: Generate semantic SQL queries (ontology-enriched queries).
 - **Knowledge Graph Access**: Interact with ontologies in natural language and retrieve context-aware answers.
 - **Streamlined Querying**: Combine natural language inputs with Timbr using simple methods like `run_llm_query`.
@@ -127,6 +136,7 @@ Wraps the **IdentifyTimbrConceptChain** functionality to identify the relevant c
 | **conn_params** | dict<br />Default: None<br />**Optional** | Extra Timbr connection parameters sent with every request (e.g., 'x-api-impersonate-user'). |
 
 **Usage Example:**
+
 ```python
 from langgraph.graph import StateGraph
 from langchain_timbr import IdentifyConceptNode
@@ -180,6 +190,7 @@ Wraps the **GenerateTimbrSqlChain** functionality to generate SQL from a natural
 | **conn_params** | dict<br />Default: None<br />**Optional** | Extra Timbr connection parameters sent with every request (e.g., 'x-api-impersonate-user'). |
 
 **Usage Example:**
+
 ```python
 from langgraph.graph import StateGraph
 from langchain_timbr import GenerateTimbrSqlNode
@@ -232,6 +243,7 @@ Wraps the **ValidateTimbrSqlChain** functionality to validate (and optionally ad
 | **conn_params** | dict<br />Default: None<br />**Optional** | Extra Timbr connection parameters sent with every request (e.g., 'x-api-impersonate-user'). |
 
 **Usage Example:**
+
 ```python
 from langgraph.graph import StateGraph
 from langchain_timbr import ValidateSemanticSqlNode
@@ -289,6 +301,7 @@ Wraps the **ExecuteTimbrQueryChain** functionality to execute the generated SQL 
 | **conn_params** | dict<br />Default: None<br />**Optional** | Extra Timbr connection parameters sent with every request (e.g., 'x-api-impersonate-user'). |
 
 **Usage Example:**
+
 ```python
 from langgraph.graph import StateGraph
 from langchain_timbr import ExecuteSemanticQueryNode
@@ -328,6 +341,7 @@ Wraps the **GenerateAnswerChain** functionality to answer based on the prompt an
 | **conn_params** | dict<br />Default: None<br />**Optional** | Extra Timbr connection parameters sent with every request (e.g., 'x-api-impersonate-user'). |
 
 **Usage Example:**
+
 ```python
 from langgraph.graph import StateGraph
 from langchain_timbr import GenerateResponseNode

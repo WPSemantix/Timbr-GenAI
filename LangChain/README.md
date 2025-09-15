@@ -14,6 +14,7 @@ To use this SDK, ensure you have the following:
 
 - **Python Version**: Python 3.9+
 - **Required Dependencies**:
+
   ```bash
   langchain==0.3.25
   langchain_community==0.3.20
@@ -21,7 +22,9 @@ To use this SDK, ensure you have the following:
   pytimbr-api>=1.0.8
   pydantic==2.10.4
   ```
+
 - **Optional Dependencies (Depending on LLM provider)**:
+
   ```bash
   langchain-anthropic==0.3.1
   anthropic==0.42.0
@@ -32,12 +35,14 @@ To use this SDK, ensure you have the following:
 ## Installation
 
 ### Using pip
+
 ```bash
 python -m pip install langchain-timbr
 ```
 
 ## Install with selected LLM providers
-### One of: openai, anthropic, google, azure_openai, snowflake, databricks (or 'all')
+
+### One of: openai, anthropic, google, azure_openai, snowflake, databricks, vertex_ai (or 'all')
 
 ```bash
 python -m pip install 'langchain-timbr[<your selected providers, separated by comma w/o space>]'
@@ -48,6 +53,7 @@ python -m pip install 'langchain-timbr[<your selected providers, separated by co
 All chains, agents, and nodes support optional environment-based configuration. You can set the following environment variables to provide default values and have easy setup for the provided tools:
 
 ### Timbr Connection Parameters
+
 - **TIMBR_URL**: Default Timbr server URL
 - **TIMBR_TOKEN**: Default Timbr authentication token  
 - **TIMBR_ONTOLOGY**: Default ontology/knowledge graph name
@@ -55,7 +61,8 @@ All chains, agents, and nodes support optional environment-based configuration. 
 When these environment variables are set, the corresponding parameters (`url`, `token`, `ontology`) become optional in all chain and agent constructors and will use the environment values as defaults.
 
 ### LLM Configuration Parameters
-- **LLM_TYPE**: The type of LLM provider (One of langchain_timbr LlmTypes enum: 'openai-chat', 'anthropic-chat', 'chat-google-generative-ai', 'azure-openai-chat', 'snowflake-cortex', 'chat-databricks')
+
+- **LLM_TYPE**: The type of LLM provider (One of langchain_timbr LlmTypes enum: 'openai-chat', 'anthropic-chat', 'chat-google-generative-ai', 'azure-openai-chat', 'snowflake-cortex', 'chat-databricks', 'chat-vertexai')
 - **LLM_API_KEY**: The API key for authenticating with the LLM provider
 - **LLM_MODEL**: The model name or deployment to use
 - **LLM_TEMPERATURE**: Temperature setting for the LLM
@@ -64,6 +71,7 @@ When these environment variables are set, the corresponding parameters (`url`, `
 When LLM environment variables are set, the `llm` parameter becomes optional and will use the `LlmWrapper` with environment configuration.
 
 Example environment setup:
+
 ```bash
 # Timbr connection
 export TIMBR_URL="https://your-timbr-app.com/"
@@ -80,7 +88,7 @@ export LLM_ADDITIONAL_PARAMS='{"max_tokens": 1000}'
 
 ## Features
 
-- **Multi-LLM Support**: Integrates with OpenAI GPT, Anthropic Claude, Google Gemini, Databricks DBRX/llama, Snowflake Cortex, and Timbr's native LLM (or any custom LLM using the LangChain interface)
+- **Multi-LLM Support**: Integrates with OpenAI GPT, Anthropic Claude, Google Gemini, Databricks DBRX/llama, Snowflake Cortex, Google VertexAI and Timbr's native LLM (or any custom LLM using the LangChain interface)
 - **SQL Generation**: Generate semantic SQL queries (ontology-enriched queries).
 - **Knowledge Graph Access**: Interact with ontologies in natural language and retrieve context-aware answers.
 - **Streamlined Querying**: Combine natural language inputs with Timbr using simple methods like `run_llm_query`.
@@ -244,6 +252,7 @@ generate_sql_usage = usage_metadata.get('generate_sql', {})
 ```
 
 #### Use create_timbr_sql_agent to get AgentExecutor instance and invoke directly
+
 ```python
 from langchain_timbr import create_timbr_sql_agent
 
