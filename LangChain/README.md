@@ -42,7 +42,7 @@ python -m pip install langchain-timbr
 
 ## Install with selected LLM providers
 
-### One of: openai, anthropic, google, azure_openai, snowflake, databricks, vertex_ai (or 'all')
+### One of: openai, anthropic, google, azure_openai, snowflake, databricks, vertex_ai, bedrock (or 'all')
 
 ```bash
 python -m pip install 'langchain-timbr[<your selected providers, separated by comma w/o space>]'
@@ -62,7 +62,7 @@ When these environment variables are set, the corresponding parameters (`url`, `
 
 ### LLM Configuration Parameters
 
-- **LLM_TYPE**: The type of LLM provider (One of langchain_timbr LlmTypes enum: 'openai-chat', 'anthropic-chat', 'chat-google-generative-ai', 'azure-openai-chat', 'snowflake-cortex', 'chat-databricks', 'chat-vertexai')
+- **LLM_TYPE**: The type of LLM provider (One of langchain_timbr LlmTypes enum: 'openai-chat', 'anthropic-chat', 'chat-google-generative-ai', 'azure-openai-chat', 'snowflake-cortex', 'chat-databricks', 'chat-vertexai', 'amazon_bedrock_converse_chat')
 - **LLM_API_KEY**: The API key for authenticating with the LLM provider
 - **LLM_MODEL**: The model name or deployment to use
 - **LLM_TEMPERATURE**: Temperature setting for the LLM
@@ -88,7 +88,7 @@ export LLM_ADDITIONAL_PARAMS='{"max_tokens": 1000}'
 
 ## Features
 
-- **Multi-LLM Support**: Integrates with OpenAI GPT, Anthropic Claude, Google Gemini, Databricks DBRX/llama, Snowflake Cortex, Google VertexAI and Timbr's native LLM (or any custom LLM using the LangChain interface)
+- **Multi-LLM Support**: Integrates with OpenAI GPT, Anthropic Claude, Google Gemini, Databricks DBRX/llama, Snowflake Cortex, Google VertexAI, AWS Bedrock, and Timbr's native LLM (or any custom LLM using the LangChain interface)
 - **SQL Generation**: Generate semantic SQL queries (ontology-enriched queries).
 - **Knowledge Graph Access**: Interact with ontologies in natural language and retrieve context-aware answers.
 - **Streamlined Querying**: Combine natural language inputs with Timbr using simple methods like `run_llm_query`.

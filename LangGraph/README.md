@@ -45,7 +45,7 @@ python -m pip install langchain-timbr
 
 ## Install with selected LLM providers
 
-### One of: openai, anthropic, google, azure_openai, snowflake, databricks, vertex_ai (or 'all')
+### One of: openai, anthropic, google, azure_openai, snowflake, databricks, vertex_ai, bedrock (or 'all')
 
 ```bash
 python -m pip install 'langchain-timbr[<your selected providers, separated by comma w/o space>]'
@@ -65,7 +65,7 @@ When these environment variables are set, the corresponding parameters (`url`, `
 
 **LLM Configuration Variables:**
 
-- **LLM_TYPE**: Type of LLM to use (e.g., "openai", "anthropic", "azure_openai", "google", "snowflake", "databricks", "chat-vertexai", "timbr")
+- **LLM_TYPE**: Type of LLM to use (e.g., "openai", "anthropic", "azure_openai", "google", "snowflake", "databricks", "chat-vertexai", "amazon_bedrock_converse_chat", "timbr")
 - **LLM_API_KEY**: API key for the LLM provider
 - **LLM_MODEL**: Model name to use (e.g., "gpt-4o", "claude-3-5-sonnet-20241022")
 - **LLM_TEMPERATURE**: Temperature setting for the LLM (default: 0.1)
@@ -104,7 +104,7 @@ You can use these files as templates to build your own custom graph-based agents
 
 ## Features
 
-- **Multi-LLM Support**: Integrates with OpenAI GPT, Anthropic Claude, Google Gemini, Databricks DBRX/llama, Snowflake Cortex, Google VertexAI and Timbr's native LLM (or any custom LLM using the LangChain interface)
+- **Multi-LLM Support**: Integrates with OpenAI GPT, Anthropic Claude, Google Gemini, Databricks DBRX/llama, Snowflake Cortex, Google VertexAI, AWS Bedrock, and Timbr's native LLM (or any custom LLM using the LangChain interface)
 - **SQL Generation**: Generate semantic SQL queries (ontology-enriched queries).
 - **Knowledge Graph Access**: Interact with ontologies in natural language and retrieve context-aware answers.
 - **Streamlined Querying**: Combine natural language inputs with Timbr using simple methods like `run_llm_query`.
