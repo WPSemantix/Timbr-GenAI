@@ -339,6 +339,7 @@ Wraps the **GenerateAnswerChain** functionality to answer based on the prompt an
 | **is_jwt** | bool<br />Default: False<br />**Optional** | Whether to use JWT authentication. |
 | **jwt_tenant_id** | str<br />Default: None<br />**Optional** | Tenant ID for JWT authentication (if applicable). |
 | **conn_params** | dict<br />Default: None<br />**Optional** | Extra Timbr connection parameters sent with every request (e.g., 'x-api-impersonate-user'). |
+| **note** | str<br />Default: None<br />**Optional** | Additional note to extend the LLM prompt. |
 
 **Usage Example:**
 
