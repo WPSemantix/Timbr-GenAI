@@ -199,7 +199,7 @@ Create a Timbr SQL agent that wraps the pipeline to identify the relevant concep
 | **should_validate_sql** | bool<br />Default: True<br />**Optional** | Whether to validate the SQL before executing it. |
 | **retries** | int<br />Default: 2<br />**Optional** | Number of retry attempts if the generated SQL is invalid. |
 | **max_limit** | int<br />Default: 500<br />**Optional** | Maximum number of rows to return. |
-| **retry_if_no_results** | bool<br />Default: False<br />**Optional** | Whether to infer the result value from the SQL query. If the query won't return any rows, it will try to re-generate the SQL query then re-run it. |
+| **retry_if_no_results** | bool<br />Default: True<br />**Optional** | Whether to infer the result value from the SQL query. If the query won't return any rows, it will try to re-generate the SQL query then re-run it. |
 | **no_results_max_retries** | int<br />Default: 2<br />**Optional** | Number of retry attempts to infer the result value from the SQL query. |
 | **generate_answer** | bool<br />Default: False<br />**Optional** | Whether to generate a natural language answer from the query results. |
 | **note** | str<br />Default: None<br />**Optional** | Additional note to extend the LLM prompt. |
@@ -481,7 +481,7 @@ Calls the Generate SQL Chain and executes the query in timbr. Returns the query 
 | **should_validate_sql** | bool<br />Default: True<br />**Optional** | Whether to validate the SQL before executing it. |
 | **retries** | int<br />Default: 2<br />**Optional** | Number of retry attempts if the generated SQL is invalid. |
 | **max_limit** | int<br />Default: 500<br />**Optional** | Maximum number of rows to return. |
-| **retry_if_no_results** | bool<br />Default: False<br />**Optional** | Whether to infer the result value from the SQL query. If the query won't return any rows, it will try to re-generate the SQL query then re-run it. |
+| **retry_if_no_results** | bool<br />Default: True<br />**Optional** | Whether to infer the result value from the SQL query. If the query won't return any rows, it will try to re-generate the SQL query then re-run it. |
 | **no_results_max_retries** | int<br />Default: 2<br />**Optional** | Number of retry attempts to infer the result value from the SQL query. |
 | **note** | str<br />Default: None<br />**Optional** | Additional note to extend the LLM prompt. |
 | **db_is_case_sensitive** | bool<br />Default: False<br />**Optional** | Whether the database is case sensitive. |

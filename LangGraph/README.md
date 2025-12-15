@@ -294,7 +294,7 @@ Wraps the **ExecuteTimbrQueryChain** functionality to execute the generated SQL 
 | **should_validate_sql** | bool<br />Default: True<br />**Optional** | Whether to validate the SQL before executing it. |
 | **retries** | int<br />Default: 2<br />**Optional** | Number of retry attempts if the generated SQL is invalid. |
 | **max_limit** | int<br />Default: 100<br />**Optional** | Maximum number of rows to return. |
-| **retry_if_no_results** | bool<br />Default: False<br />**Optional** | Whether to infer the result value from the SQL query. If the query won't return any rows, it will try to re-generate the SQL query then re-run it. |
+| **retry_if_no_results** | bool<br />Default: True<br />**Optional** | Whether to infer the result value from the SQL query. If the query won't return any rows, it will try to re-generate the SQL query then re-run it. |
 | **no_results_max_retries** | int<br />Default: 2<br />**Optional** | Number of retry attempts to infer the result value from the SQL query. |
 | **note** | str<br />Default: None<br />**Optional** | Additional note to extend the LLM prompt. |
 | **db_is_case_sensitive** | bool<br />Default: False<br />**Optional** | Whether the database is case sensitive. |
