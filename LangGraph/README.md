@@ -184,6 +184,8 @@ Wraps the **GenerateTimbrSqlChain** functionality to generate SQL from a natural
 | **note** | str<br />Default: None<br />**Optional** | Additional note to extend the LLM prompt. |
 | **db_is_case_sensitive** | bool<br />Default: False<br />**Optional** | Whether the database is case sensitive. |
 | **graph_depth** | int<br />Default: 1<br />**Optional** | Maximum number of relationship hops to traverse from the source concept during schema exploration. |
+| **enable_reasoning** | bool<br />Default: False<br />**Optional** | Whether to enable reasoning during SQL generation. |
+| **reasoning_steps** | int<br />Default: 2<br />**Optional** | Number of reasoning steps to perform if reasoning is enabled. |
 | **verify_ssl** | bool<br />Default: True<br />**Optional** | Whether to verify SSL certificates. |
 | **is_jwt** | bool<br />Default: False<br />**Optional** | Whether to use JWT authentication. |
 | **jwt_tenant_id** | str<br />Default: None<br />**Optional** | Tenant ID for JWT authentication (if applicable). |
@@ -237,6 +239,8 @@ Wraps the **ValidateTimbrSqlChain** functionality to validate (and optionally ad
 | **note** | str<br />Default: None<br />**Optional** | Additional note to extend the LLM prompt. |
 | **db_is_case_sensitive** | bool<br />Default: False<br />**Optional** | Whether the database is case sensitive. |
 | **graph_depth** | int<br />Default: 1<br />**Optional** | Maximum number of relationship hops to traverse from the source concept during schema exploration. |
+| **enable_reasoning** | bool<br />Default: False<br />**Optional** | Whether to enable reasoning during SQL generation. |
+| **reasoning_steps** | int<br />Default: 2<br />**Optional** | Number of reasoning steps to perform if reasoning is enabled. |
 | **verify_ssl** | bool<br />Default: True<br />**Optional** | Whether to verify SSL certificates. |
 | **is_jwt** | bool<br />Default: False<br />**Optional** | Whether to use JWT authentication. |
 | **jwt_tenant_id** | str<br />Default: None<br />**Optional** | Tenant ID for JWT authentication (if applicable). |
@@ -295,6 +299,8 @@ Wraps the **ExecuteTimbrQueryChain** functionality to execute the generated SQL 
 | **note** | str<br />Default: None<br />**Optional** | Additional note to extend the LLM prompt. |
 | **db_is_case_sensitive** | bool<br />Default: False<br />**Optional** | Whether the database is case sensitive. |
 | **graph_depth** | int<br />Default: 1<br />**Optional** | Maximum number of relationship hops to traverse from the source concept during schema exploration. |
+| **enable_reasoning** | bool<br />Default: False<br />**Optional** | Whether to enable reasoning during SQL generation. |
+| **reasoning_steps** | int<br />Default: 2<br />**Optional** | Number of reasoning steps to perform if reasoning is enabled. |
 | **verify_ssl** | bool<br />Default: True<br />**Optional** | Whether to verify SSL certificates. |
 | **is_jwt** | bool<br />Default: False<br />**Optional** | Whether to use JWT authentication. |
 | **jwt_tenant_id** | str<br />Default: None<br />**Optional** | Tenant ID for JWT authentication (if applicable). |

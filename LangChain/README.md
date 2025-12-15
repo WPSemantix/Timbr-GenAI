@@ -198,13 +198,15 @@ Create a Timbr SQL agent that wraps the pipeline to identify the relevant concep
 | **exclude_properties** | List[str] or str<br />Default: None<br />**Optional** | Collection of properties to exclude from the query (List of strings, or a string of property names divided by comma. entity_id, entity_type & entity_label are excluded by default). |
 | **should_validate_sql** | bool<br />Default: True<br />**Optional** | Whether to validate the SQL before executing it. |
 | **retries** | int<br />Default: 2<br />**Optional** | Number of retry attempts if the generated SQL is invalid. |
-| **max_limit** | int<br />Default: 100<br />**Optional** | Maximum number of rows to return. |
+| **max_limit** | int<br />Default: 500<br />**Optional** | Maximum number of rows to return. |
 | **retry_if_no_results** | bool<br />Default: False<br />**Optional** | Whether to infer the result value from the SQL query. If the query won't return any rows, it will try to re-generate the SQL query then re-run it. |
 | **no_results_max_retries** | int<br />Default: 2<br />**Optional** | Number of retry attempts to infer the result value from the SQL query. |
 | **generate_answer** | bool<br />Default: False<br />**Optional** | Whether to generate a natural language answer from the query results. |
 | **note** | str<br />Default: None<br />**Optional** | Additional note to extend the LLM prompt. |
 | **db_is_case_sensitive** | bool<br />Default: False<br />**Optional** | Whether the database is case sensitive. |
 | **graph_depth** | int<br />Default: 1<br />**Optional** | Maximum number of relationship hops to traverse from the source concept during schema exploration. |
+| **enable_reasoning** | bool<br />Default: False<br />**Optional** | Whether to enable reasoning during SQL generation. |
+| **reasoning_steps** | int<br />Default: 2<br />**Optional** | Number of reasoning steps to perform if reasoning is enabled. |
 | **verify_ssl** | bool<br />Default: True<br />**Optional** | Whether to verify SSL certificates. |
 | **is_jwt** | bool<br />Default: False<br />**Optional** | Whether to use JWT authentication. |
 | **jwt_tenant_id** | str<br />Default: None<br />**Optional** | Tenant ID for JWT authentication (if applicable). |
@@ -349,10 +351,12 @@ Returns the suggested SQL based on the user question.
 | **exclude_properties** | List[str] or str<br />Default: None<br />**Optional** | Collection of properties to exclude from the query (List of strings, or a string of property names divided by comma. entity_id, entity_type & entity_label are excluded by default). |
 | **should_validate_sql** | bool<br />Default: True<br />**Optional** | Whether to validate the SQL before executing it. |
 | **retries** | int<br />Default: 2<br />**Optional** | Number of retry attempts if the generated SQL is invalid. |
-| **max_limit** | int<br />Default: 100<br />**Optional** | Maximum number of rows to return. |
+| **max_limit** | int<br />Default: 500<br />**Optional** | Maximum number of rows to return. |
 | **note** | str<br />Default: None<br />**Optional** | Additional note to extend the LLM prompt. |
 | **db_is_case_sensitive** | bool<br />Default: False<br />**Optional** | Whether the database is case sensitive. |
 | **graph_depth** | int<br />Default: 1<br />**Optional** | Maximum number of relationship hops to traverse from the source concept during schema exploration. |
+| **enable_reasoning** | bool<br />Default: False<br />**Optional** | Whether to enable reasoning during SQL generation. |
+| **reasoning_steps** | int<br />Default: 2<br />**Optional** | Number of reasoning steps to perform if reasoning is enabled. |
 | **verify_ssl** | bool<br />Default: True<br />**Optional** | Whether to verify SSL certificates. |
 | **is_jwt** | bool<br />Default: False<br />**Optional** | Whether to use JWT authentication. |
 | **jwt_tenant_id** | str<br />Default: None<br />**Optional** | Tenant ID for JWT authentication (if applicable). |
@@ -408,10 +412,12 @@ Validates the timbr SQL and re-generate a new one if necessary based on the user
 | **include_logic_concepts** | bool<br />Default: False<br />**Optional** | Whether to include logic concepts (concepts without unique properties which only inherit from an upper level concept with filter logic) in the query.<br />*Note: This parameter has no effect when `concepts_list` is provided.* |
 | **include_tags** | List[str] or str<br />Default: None<br />**Optional** | Specific concept/property tag names to consider when generating the query.<br />- If `None` or empty, no tags are used.<br />- If a single string or list of strings is provided, only those tags (if they exist) will be attached to the prompt.<br />- Use List of strings or a comma-separated string (e.g. `'tag1,tag2'`) to specify multiple tags.<br />- Use `'*'` to include **all** tags. |
 | **exclude_properties** | List[str] or str<br />Default: None<br />**Optional** | Collection of properties to exclude from the query (List of strings, or a string of property names divided by comma. entity_id, entity_type & entity_label are excluded by default). |
-| **max_limit** | int<br />Default: 100<br />**Optional** | Maximum number of rows to return. |
+| **max_limit** | int<br />Default: 500<br />**Optional** | Maximum number of rows to return. |
 | **note** | str<br />Default: None<br />**Optional** | Additional note to extend the LLM prompt. |
 | **db_is_case_sensitive** | bool<br />Default: False<br />**Optional** | Whether the database is case sensitive. |
 | **graph_depth** | int<br />Default: 1<br />**Optional** | Maximum number of relationship hops to traverse from the source concept during schema exploration. |
+| **enable_reasoning** | bool<br />Default: False<br />**Optional** | Whether to enable reasoning during SQL generation. |
+| **reasoning_steps** | int<br />Default: 2<br />**Optional** | Number of reasoning steps to perform if reasoning is enabled. |
 | **verify_ssl** | bool<br />Default: True<br />**Optional** | Whether to verify SSL certificates. |
 | **is_jwt** | bool<br />Default: False<br />**Optional** | Whether to use JWT authentication. |
 | **jwt_tenant_id** | str<br />Default: None<br />**Optional** | Tenant ID for JWT authentication (if applicable). |
@@ -474,12 +480,14 @@ Calls the Generate SQL Chain and executes the query in timbr. Returns the query 
 | **exclude_properties** | List[str] or str<br />Default: None<br />**Optional** | Collection of properties to exclude from the query (List of strings, or a string of property names divided by comma. entity_id, entity_type & entity_label are excluded by default). |
 | **should_validate_sql** | bool<br />Default: True<br />**Optional** | Whether to validate the SQL before executing it. |
 | **retries** | int<br />Default: 2<br />**Optional** | Number of retry attempts if the generated SQL is invalid. |
-| **max_limit** | int<br />Default: 100<br />**Optional** | Maximum number of rows to return. |
+| **max_limit** | int<br />Default: 500<br />**Optional** | Maximum number of rows to return. |
 | **retry_if_no_results** | bool<br />Default: False<br />**Optional** | Whether to infer the result value from the SQL query. If the query won't return any rows, it will try to re-generate the SQL query then re-run it. |
 | **no_results_max_retries** | int<br />Default: 2<br />**Optional** | Number of retry attempts to infer the result value from the SQL query. |
 | **note** | str<br />Default: None<br />**Optional** | Additional note to extend the LLM prompt. |
 | **db_is_case_sensitive** | bool<br />Default: False<br />**Optional** | Whether the database is case sensitive. |
 | **graph_depth** | int<br />Default: 1<br />**Optional** | Maximum number of relationship hops to traverse from the source concept during schema exploration. |
+| **enable_reasoning** | bool<br />Default: False<br />**Optional** | Whether to enable reasoning during SQL generation. |
+| **reasoning_steps** | int<br />Default: 2<br />**Optional** | Number of reasoning steps to perform if reasoning is enabled. |
 | **verify_ssl** | bool<br />Default: True<br />**Optional** | Whether to verify SSL certificates. |
 | **is_jwt** | bool<br />Default: False<br />**Optional** | Whether to use JWT authentication. |
 | **jwt_tenant_id** | str<br />Default: None<br />**Optional** | Tenant ID for JWT authentication (if applicable). |
