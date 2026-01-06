@@ -152,7 +152,7 @@ identify_node = IdentifyConceptNode(
     views_list=["sales_view"]
 )
 
-state = StateGraph()
+state = StateGraph(dict)
 state.messages = [{"content": "What are the total sales for last month?"}]
 
 output = identify_node(state)
@@ -208,7 +208,7 @@ generate_sql_node = GenerateTimbrSqlNode(
     concept="Sales"
 )
 
-state = StateGraph()
+state = StateGraph(dict)
 state.messages = [{"content": "What are the total sales for last month?"}]
 
 output = generate_sql_node(state)
@@ -264,7 +264,7 @@ validate_sql_node = ValidateSemanticSqlNode(
     retries=3
 )
 
-state = StateGraph()
+state = StateGraph(dict)
 state.sql = "SELECT SUM(amount) FROM sales WHERE date > current_date - INTERVAL '1 month'"
 state.prompt = "What are the total sales for last month?"
 
@@ -323,7 +323,7 @@ execute_query_node = ExecuteSemanticQueryNode(
     concept="Sales"
 )
 
-state = StateGraph()
+state = StateGraph(dict)
 state.messages = [{"content": "What are the total sales for last month?"}]
 
 output = execute_query_node(state)
@@ -361,7 +361,7 @@ response_node = GenerateResponseNode(
     token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",  # optional: uses TIMBR_TOKEN if not specified
 )
 
-state = StateGraph()
+state = StateGraph(dict)
 state.prompt = "Summarize last month total sales"
 state.sql = "SELECT SUM(amount) FROM sales WHERE date > current_date - INTERVAL '1 month'"
 state.schema = "dtimbr"
