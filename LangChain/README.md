@@ -207,6 +207,7 @@ Create a Timbr SQL agent that wraps the pipeline to identify the relevant concep
 | **graph_depth** | int<br />Default: 1<br />**Optional** | Maximum number of relationship hops to traverse from the source concept during schema exploration. |
 | **enable_reasoning** | bool<br />Default: False<br />**Optional** | Whether to enable reasoning during SQL generation. |
 | **reasoning_steps** | int<br />Default: 2<br />**Optional** | Number of reasoning steps to perform if reasoning is enabled. |
+| **agent** | str<br />Default: None<br />**Optional** | Optional Timbr agent name for options setup. |
 | **verify_ssl** | bool<br />Default: True<br />**Optional** | Whether to verify SSL certificates. |
 | **is_jwt** | bool<br />Default: False<br />**Optional** | Whether to use JWT authentication. |
 | **jwt_tenant_id** | str<br />Default: None<br />**Optional** | Tenant ID for JWT authentication (if applicable). |
@@ -299,6 +300,7 @@ Returns the suggested concept to query based on the user question.
 | **should_validate_sql** | bool<br />Default: True<br />**Optional** | Whether to validate the identified concept before returning it. |
 | **retries** | int<br />Default: 2<br />**Optional** | Number of retry attempts if the identified concept is invalid. |
 | **note** | str<br />Default: None<br />**Optional** | Additional note to extend the LLM prompt. |
+| **agent** | str<br />Default: None<br />**Optional** | Optional Timbr agent name for options setup. |
 | **verify_ssl** | bool<br />Default: True<br />**Optional** | Whether to verify SSL certificates. |
 | **is_jwt** | bool<br />Default: False<br />**Optional** | Whether to use JWT authentication. |
 | **jwt_tenant_id** | str<br />Default: None<br />**Optional** | Tenant ID for JWT authentication (if applicable). |
@@ -357,6 +359,7 @@ Returns the suggested SQL based on the user question.
 | **graph_depth** | int<br />Default: 1<br />**Optional** | Maximum number of relationship hops to traverse from the source concept during schema exploration. |
 | **enable_reasoning** | bool<br />Default: False<br />**Optional** | Whether to enable reasoning during SQL generation. |
 | **reasoning_steps** | int<br />Default: 2<br />**Optional** | Number of reasoning steps to perform if reasoning is enabled. |
+| **agent** | str<br />Default: None<br />**Optional** | Optional Timbr agent name for options setup. |
 | **verify_ssl** | bool<br />Default: True<br />**Optional** | Whether to verify SSL certificates. |
 | **is_jwt** | bool<br />Default: False<br />**Optional** | Whether to use JWT authentication. |
 | **jwt_tenant_id** | str<br />Default: None<br />**Optional** | Tenant ID for JWT authentication (if applicable). |
@@ -418,6 +421,7 @@ Validates the timbr SQL and re-generate a new one if necessary based on the user
 | **graph_depth** | int<br />Default: 1<br />**Optional** | Maximum number of relationship hops to traverse from the source concept during schema exploration. |
 | **enable_reasoning** | bool<br />Default: False<br />**Optional** | Whether to enable reasoning during SQL generation. |
 | **reasoning_steps** | int<br />Default: 2<br />**Optional** | Number of reasoning steps to perform if reasoning is enabled. |
+| **agent** | str<br />Default: None<br />**Optional** | Optional Timbr agent name for options setup. |
 | **verify_ssl** | bool<br />Default: True<br />**Optional** | Whether to verify SSL certificates. |
 | **is_jwt** | bool<br />Default: False<br />**Optional** | Whether to use JWT authentication. |
 | **jwt_tenant_id** | str<br />Default: None<br />**Optional** | Tenant ID for JWT authentication (if applicable). |
@@ -488,6 +492,7 @@ Calls the Generate SQL Chain and executes the query in timbr. Returns the query 
 | **graph_depth** | int<br />Default: 1<br />**Optional** | Maximum number of relationship hops to traverse from the source concept during schema exploration. |
 | **enable_reasoning** | bool<br />Default: False<br />**Optional** | Whether to enable reasoning during SQL generation. |
 | **reasoning_steps** | int<br />Default: 2<br />**Optional** | Number of reasoning steps to perform if reasoning is enabled. |
+| **agent** | str<br />Default: None<br />**Optional** | Optional Timbr agent name for options setup. |
 | **verify_ssl** | bool<br />Default: True<br />**Optional** | Whether to verify SSL certificates. |
 | **is_jwt** | bool<br />Default: False<br />**Optional** | Whether to use JWT authentication. |
 | **jwt_tenant_id** | str<br />Default: None<br />**Optional** | Tenant ID for JWT authentication (if applicable). |
@@ -537,6 +542,7 @@ Generates answer based on the prompt and query results.
 | **llm** | LLM<br />Default: None<br />**Optional** | Language model instance (or a function taking a prompt string and returning an LLM's response). If None, uses `LlmWrapper` with environment variables. |
 | **url** | str<br />Default: None<br />**Optional** | Timbr server URL. If None, uses the value from the `TIMBR_URL` environment variable. |
 | **token** | str<br />Default: None<br />**Optional** | Timbr authentication token. If None, uses the value from the `TIMBR_TOKEN` environment variable. |
+| **agent** | str<br />Default: None<br />**Optional** | Optional Timbr agent name for options setup. |
 | **verify_ssl** | bool<br />Default: True<br />**Optional** | Whether to verify SSL certificates. |
 | **is_jwt** | bool<br />Default: False<br />**Optional** | Whether to use JWT authentication. |
 | **jwt_tenant_id** | str<br />Default: None<br />**Optional** | Tenant ID for JWT authentication (if applicable). |
