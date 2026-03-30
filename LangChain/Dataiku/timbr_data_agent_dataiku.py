@@ -33,7 +33,7 @@ class TimbrLLM(BaseLLM):
                     "x-api-key": api_key,
                 },
                 json={"prompt": prompt},
-                timeout=120,
+                timeout=600,
             )
             response.raise_for_status()
             data = response.json().get("data", {})
