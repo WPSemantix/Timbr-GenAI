@@ -18,3 +18,4 @@ result = generate_timbr_llm_chain.invoke({ "prompt": "What are the total sales f
 # Access the components of the result:
 sql = result["sql"]
 concept = result["concept"]
+reasoning_status = result.get("reasoning_status")

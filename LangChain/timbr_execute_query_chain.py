@@ -19,3 +19,4 @@ result = execute_timbr_query_chain.invoke({ "prompt": "What are the total sales 
 rows = result["rows"]
 sql = result["sql"]
 concept = result["concept"]
+reasoning_status = result.get("reasoning_status")

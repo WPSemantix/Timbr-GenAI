@@ -22,6 +22,8 @@ identify_node = IdentifyConceptNode(
     ontology="timbr_knowledge_graph",
     concepts_list=["Sales", "Orders"],
     views_list=["sales_view"],
+    # enable_trace=True,       # optional: enable per-chain trace logging
+    # conversation_id="conv-1" # optional: group calls into a multi-turn conversation
 )
 
 generate_sql_node = GenerateTimbrSqlNode(

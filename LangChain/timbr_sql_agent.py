@@ -26,3 +26,6 @@ sql = result["sql"]
 schema = result["schema"]
 concept = result["concept"]
 error = result["error"]
+reasoning_status = result.get("reasoning_status")
+identify_concept_reason = result.get("identify_concept_reason")
+generate_sql_reason = result.get("generate_sql_reason")

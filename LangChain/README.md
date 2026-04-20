@@ -18,9 +18,10 @@ To use this SDK, ensure you have the following:
   ```bash
   langchain==0.3.25
   langchain_community==0.3.20
-  langgraph==0.3.20
+  langgraph~=1.0.10
+  langgraph-checkpoint~=4.0.0
   pytimbr-api>=1.0.8
-  pydantic==2.10.4
+  pydantic>=2.0.0
   ```
 
 - **Optional Dependencies (Depending on LLM provider)**:
@@ -70,6 +71,12 @@ When these environment variables are set, the corresponding parameters (`url`, `
 
 When LLM environment variables are set, the `llm` parameter becomes optional and will use the `LlmWrapper` with environment configuration.
 
+### Monitoring & History Parameters
+
+- **TIMBR_ENABLE_TRACE**: Enable trace logging per chain step (true/false, default: `false`)
+- **TIMBR_ENABLE_HISTORY**: Enable query history storage on the Timbr server (true/false, default: `false`)
+- **TIMBR_HISTORY_SAVE_RESULTS**: Include result rows in history entries (true/false, default: `false`)
+
 Example environment setup:
 
 ```bash
@@ -85,6 +92,27 @@ export LLM_MODEL="gpt-4o"
 export LLM_TEMPERATURE="0.1"
 export LLM_ADDITIONAL_PARAMS='{"max_tokens": 1000}'
 ```
+
+## Monitoring & Tracing
+
+The SDK supports optional execution tracing and query history recording for all chains and agents. Enable via environment variables (see Configuration above) or pass parameters directly at construction time.
+
+```python
+from langchain_timbr import TimbrSqlAgent
+
+agent = TimbrSqlAgent(
+    llm=llm,
+    url="https://your-timbr-app.com/",
+    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",
+    ontology="timbr_knowledge_graph",
+    enable_trace=True,           # Enable per-chain trace logging
+    enable_history=True,         # Store query history on the Timbr server
+    save_results=True,           # Include result rows in history entries
+    conversation_id="conv-123",  # Group calls into a multi-turn conversation
+)
+```
+
+Setting `LANGSMITH_API_KEY` in your environment enables LangSmith integration for trace visualization.
 
 ## Features
 
@@ -173,6 +201,11 @@ schema = result["schema"]
 concept = result["concept"]
 user_metadata = result["user_metadata"] # Token usage metadata - estimated & from llm response
 error = result.get("error", None)
+reasoning_status = result.get("reasoning_status")
+identify_concept_reason = result.get("identify_concept_reason")
+generate_sql_reason = result.get("generate_sql_reason")
+conversation_id = result.get("conversation_id")
+chain_context = result.get("chain_context")
 ```
 
 ## LangChain interface
@@ -212,6 +245,10 @@ Create a Timbr SQL agent that wraps the pipeline to identify the relevant concep
 | **is_jwt** | bool<br />Default: False<br />**Optional** | Whether to use JWT authentication. |
 | **jwt_tenant_id** | str<br />Default: None<br />**Optional** | Tenant ID for JWT authentication (if applicable). |
 | **conn_params** | dict<br />Default: None<br />**Optional** | Extra Timbr connection parameters sent with every request (e.g., 'x-api-impersonate-user'). |
+| **enable_trace** | bool<br />Default: `TIMBR_ENABLE_TRACE`<br />**Optional** | Enable per-chain trace logging. Requires `LANGSMITH_API_KEY` for LangSmith integration. |
+| **enable_history** | bool<br />Default: `TIMBR_ENABLE_HISTORY`<br />**Optional** | Store query history on the Timbr server. |
+| **save_results** | bool<br />Default: `TIMBR_HISTORY_SAVE_RESULTS`<br />**Optional** | Include result rows in history entries. |
+| **conversation_id** | str<br />Default: None<br />**Optional** | Group multiple agent calls into a single conversation for multi-turn tracking. |
 
 #### Create agent and use with AgentExecutor
 ```python
@@ -245,6 +282,11 @@ sql = result["sql"]
 concept = result["concept"]
 schema = result["schema"]
 error = result.get("error", None)
+reasoning_status = result.get("reasoning_status")
+identify_concept_reason = result.get("identify_concept_reason")
+generate_sql_reason = result.get("generate_sql_reason")
+conversation_id = result.get("conversation_id")
+chain_context = result.get("chain_context")
 
 usage_metadata = result.get("usage_metadata", {})
 determine_concept_usage = usage_metadata.get('determine_concept', {})
@@ -305,6 +347,8 @@ Returns the suggested concept to query based on the user question.
 | **is_jwt** | bool<br />Default: False<br />**Optional** | Whether to use JWT authentication. |
 | **jwt_tenant_id** | str<br />Default: None<br />**Optional** | Tenant ID for JWT authentication (if applicable). |
 | **conn_params** | dict<br />Default: None<br />**Optional** | Extra Timbr connection parameters sent with every request (e.g., 'x-api-impersonate-user'). |
+| **enable_trace** | bool<br />Default: `TIMBR_ENABLE_TRACE`<br />**Optional** | Enable per-chain trace logging. Requires `LANGSMITH_API_KEY` for LangSmith integration. |
+| **conversation_id** | str<br />Default: None<br />**Optional** | Group multiple calls into a single conversation for multi-turn tracking. |
 
 ```python
 from langchain_timbr import IdentifyTimbrConceptChain
@@ -364,6 +408,8 @@ Returns the suggested SQL based on the user question.
 | **is_jwt** | bool<br />Default: False<br />**Optional** | Whether to use JWT authentication. |
 | **jwt_tenant_id** | str<br />Default: None<br />**Optional** | Tenant ID for JWT authentication (if applicable). |
 | **conn_params** | dict<br />Default: None<br />**Optional** | Extra Timbr connection parameters sent with every request (e.g., 'x-api-impersonate-user'). |
+| **enable_trace** | bool<br />Default: `TIMBR_ENABLE_TRACE`<br />**Optional** | Enable per-chain trace logging. Requires `LANGSMITH_API_KEY` for LangSmith integration. |
+| **conversation_id** | str<br />Default: None<br />**Optional** | Group multiple calls into a single conversation for multi-turn tracking. |
 
 ```python
 from langchain_timbr import GenerateTimbrSqlChain
@@ -426,6 +472,8 @@ Validates the timbr SQL and re-generate a new one if necessary based on the user
 | **is_jwt** | bool<br />Default: False<br />**Optional** | Whether to use JWT authentication. |
 | **jwt_tenant_id** | str<br />Default: None<br />**Optional** | Tenant ID for JWT authentication (if applicable). |
 | **conn_params** | dict<br />Default: None<br />**Optional** | Extra Timbr connection parameters sent with every request (e.g., 'x-api-impersonate-user'). |
+| **enable_trace** | bool<br />Default: `TIMBR_ENABLE_TRACE`<br />**Optional** | Enable per-chain trace logging. Requires `LANGSMITH_API_KEY` for LangSmith integration. |
+| **conversation_id** | str<br />Default: None<br />**Optional** | Group multiple calls into a single conversation for multi-turn tracking. |
 
 ```python
 from langchain_timbr import ValidateTimbrSqlChain
@@ -497,6 +545,8 @@ Calls the Generate SQL Chain and executes the query in timbr. Returns the query 
 | **is_jwt** | bool<br />Default: False<br />**Optional** | Whether to use JWT authentication. |
 | **jwt_tenant_id** | str<br />Default: None<br />**Optional** | Tenant ID for JWT authentication (if applicable). |
 | **conn_params** | dict<br />Default: None<br />**Optional** | Extra Timbr connection parameters sent with every request (e.g., 'x-api-impersonate-user'). |
+| **enable_trace** | bool<br />Default: `TIMBR_ENABLE_TRACE`<br />**Optional** | Enable per-chain trace logging. Requires `LANGSMITH_API_KEY` for LangSmith integration. |
+| **conversation_id** | str<br />Default: None<br />**Optional** | Group multiple calls into a single conversation for multi-turn tracking. |
 
 ```python
 from langchain_timbr import ExecuteTimbrQueryChain
@@ -548,6 +598,8 @@ Generates answer based on the prompt and query results.
 | **jwt_tenant_id** | str<br />Default: None<br />**Optional** | Tenant ID for JWT authentication (if applicable). |
 | **conn_params** | dict<br />Default: None<br />**Optional** | Extra Timbr connection parameters sent with every request (e.g., 'x-api-impersonate-user'). |
 | **note** | str<br />Default: None<br />**Optional** | Additional note to extend the LLM prompt. |
+| **enable_trace** | bool<br />Default: `TIMBR_ENABLE_TRACE`<br />**Optional** | Enable per-chain trace logging. Requires `LANGSMITH_API_KEY` for LangSmith integration. |
+| **conversation_id** | str<br />Default: None<br />**Optional** | Group multiple calls into a single conversation for multi-turn tracking. |
 
 ```python
 from langchain_timbr import GenerateAnswerChain
@@ -636,6 +688,53 @@ Combine SQL generation and execution in a single step.
 ```python
 response = llm_connector.run_llm_query("What are the top 5 products by sales?")
 ```
+
+## Benchmarking
+
+The SDK includes a benchmarking utility to evaluate LLM query accuracy against a named benchmark defined in your Timbr server.
+
+```python
+from langchain_timbr.utils.benchmark import run_benchmark
+
+results = run_benchmark(
+    benchmark_name="my_benchmark",       # Name of the benchmark in SYS_AGENTS_BENCHMARKS
+    url="https://your-timbr-app.com/",
+    token="tk_XXXXXXXXXXXXXXXXXXXXXXXX",
+    ontology="timbr_knowledge_graph",
+    execution="full",                    # "full" or "generate_sql_only"
+    number_of_iterations=1,
+    use_deterministic=True,              # Row-comparison scoring
+    use_llm_judge=False,                 # LLM-as-judge scoring
+    llm_params={                         # Optional: override LLM at runtime
+        "llm_type": "openai-chat",
+        "llm_model": "gpt-4o",          # also accepted as "model"
+        "api_key": "sk-...",            # also accepted as "llm_api_key"
+    },
+)
+
+# results is a dict keyed by question ID
+summary = results["_summary"]           # Aggregate statistics
+
+# Each question result includes:
+# * "selected_entity"  — ontology entity identified for the query
+# * "assessment"       — "correct" / "incorrect" / "partial" / "skipped"
+# * "generated_sql"    — the SQL produced by the LLM
+# * "rows"             — result rows (when execution="full")
+```
+
+**Parameters:**
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `benchmark_name` | str | — | Name of the benchmark in `SYS_AGENTS_BENCHMARKS` |
+| `queries` | dict or list | None | Subset of question IDs or enhanced dict format |
+| `execution` | str | `"full"` | `"full"` runs SQL and compares rows; `"generate_sql_only"` skips execution |
+| `number_of_iterations` | int | `1` | Run each query N times for consistency scoring |
+| `use_deterministic` | bool | None | Enable row-comparison scoring |
+| `use_llm_judge` | bool | None | Enable LLM-as-judge scoring |
+| `llm_params` | dict | None | Runtime LLM override (keys: `llm_type`, `llm_model`/`model`, `llm_api_key`/`api_key`) |
+| `verify_ssl` | bool | `False` | Whether to verify SSL certificates |
+| `is_jwt` | bool | None | Whether to use JWT authentication |
 
 ## Support
 

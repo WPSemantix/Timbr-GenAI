@@ -21,9 +21,10 @@ To use this SDK, ensure you have the following:
   ```bash
   langchain==0.3.25
   langchain_community==0.3.20
-  langgraph==0.3.20
+  langgraph~=1.0.10
+  langgraph-checkpoint~=4.0.0
   pytimbr-api>=1.0.8
-  pydantic==2.10.4
+  pydantic>=2.0.0
   ```
 
 - **Optional Dependencies (Depending on LLM provider)**:
@@ -72,6 +73,14 @@ When these environment variables are set, the corresponding parameters (`url`, `
 - **LLM_ADDITIONAL_PARAMS**: Additional parameters as JSON string (e.g., '{"max_tokens": 1000}')
 
 When LLM environment variables are set, the `llm` parameter becomes optional and will use the `LlmWrapper` with environment configuration.
+
+**Monitoring & History Variables:**
+
+- **TIMBR_ENABLE_TRACE**: Enable trace logging per chain step (true/false, default: `false`)
+- **TIMBR_ENABLE_HISTORY**: Enable query history storage on the Timbr server (true/false, default: `false`)
+- **TIMBR_HISTORY_SAVE_RESULTS**: Include result rows in history entries (true/false, default: `false`)
+
+Setting `LANGSMITH_API_KEY` enables LangSmith integration for trace visualization. See the [LangChain README](../LangChain/README.md#monitoring--tracing) for a full Monitoring & Tracing guide.
 
 Example environment setup:
 
@@ -135,6 +144,8 @@ Wraps the **IdentifyTimbrConceptChain** functionality to identify the relevant c
 | **is_jwt** | bool<br />Default: False<br />**Optional** | Whether to use JWT authentication. |
 | **jwt_tenant_id** | str<br />Default: None<br />**Optional** | Tenant ID for JWT authentication (if applicable). |
 | **conn_params** | dict<br />Default: None<br />**Optional** | Extra Timbr connection parameters sent with every request (e.g., 'x-api-impersonate-user'). |
+| **enable_trace** | bool<br />Default: `TIMBR_ENABLE_TRACE`<br />**Optional** | Enable per-chain trace logging. Requires `LANGSMITH_API_KEY` for LangSmith integration. |
+| **conversation_id** | str<br />Default: None<br />**Optional** | Group multiple calls into a single conversation for multi-turn tracking. |
 
 **Usage Example:**
 
@@ -192,6 +203,8 @@ Wraps the **GenerateTimbrSqlChain** functionality to generate SQL from a natural
 | **is_jwt** | bool<br />Default: False<br />**Optional** | Whether to use JWT authentication. |
 | **jwt_tenant_id** | str<br />Default: None<br />**Optional** | Tenant ID for JWT authentication (if applicable). |
 | **conn_params** | dict<br />Default: None<br />**Optional** | Extra Timbr connection parameters sent with every request (e.g., 'x-api-impersonate-user'). |
+| **enable_trace** | bool<br />Default: `TIMBR_ENABLE_TRACE`<br />**Optional** | Enable per-chain trace logging. Requires `LANGSMITH_API_KEY` for LangSmith integration. |
+| **conversation_id** | str<br />Default: None<br />**Optional** | Group multiple calls into a single conversation for multi-turn tracking. |
 
 **Usage Example:**
 
@@ -248,6 +261,8 @@ Wraps the **ValidateTimbrSqlChain** functionality to validate (and optionally ad
 | **is_jwt** | bool<br />Default: False<br />**Optional** | Whether to use JWT authentication. |
 | **jwt_tenant_id** | str<br />Default: None<br />**Optional** | Tenant ID for JWT authentication (if applicable). |
 | **conn_params** | dict<br />Default: None<br />**Optional** | Extra Timbr connection parameters sent with every request (e.g., 'x-api-impersonate-user'). |
+| **enable_trace** | bool<br />Default: `TIMBR_ENABLE_TRACE`<br />**Optional** | Enable per-chain trace logging. Requires `LANGSMITH_API_KEY` for LangSmith integration. |
+| **conversation_id** | str<br />Default: None<br />**Optional** | Group multiple calls into a single conversation for multi-turn tracking. |
 
 **Usage Example:**
 
@@ -309,6 +324,8 @@ Wraps the **ExecuteTimbrQueryChain** functionality to execute the generated SQL 
 | **is_jwt** | bool<br />Default: False<br />**Optional** | Whether to use JWT authentication. |
 | **jwt_tenant_id** | str<br />Default: None<br />**Optional** | Tenant ID for JWT authentication (if applicable). |
 | **conn_params** | dict<br />Default: None<br />**Optional** | Extra Timbr connection parameters sent with every request (e.g., 'x-api-impersonate-user'). |
+| **enable_trace** | bool<br />Default: `TIMBR_ENABLE_TRACE`<br />**Optional** | Enable per-chain trace logging. Requires `LANGSMITH_API_KEY` for LangSmith integration. |
+| **conversation_id** | str<br />Default: None<br />**Optional** | Group multiple calls into a single conversation for multi-turn tracking. |
 
 **Usage Example:**
 
@@ -351,6 +368,8 @@ Wraps the **GenerateAnswerChain** functionality to answer based on the prompt an
 | **jwt_tenant_id** | str<br />Default: None<br />**Optional** | Tenant ID for JWT authentication (if applicable). |
 | **conn_params** | dict<br />Default: None<br />**Optional** | Extra Timbr connection parameters sent with every request (e.g., 'x-api-impersonate-user'). |
 | **note** | str<br />Default: None<br />**Optional** | Additional note to extend the LLM prompt. |
+| **enable_trace** | bool<br />Default: `TIMBR_ENABLE_TRACE`<br />**Optional** | Enable per-chain trace logging. Requires `LANGSMITH_API_KEY` for LangSmith integration. |
+| **conversation_id** | str<br />Default: None<br />**Optional** | Group multiple calls into a single conversation for multi-turn tracking. |
 
 **Usage Example:**
 
